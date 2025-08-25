@@ -1,0 +1,105 @@
+{
+  "skills": [
+    {
+      "id": "python_advanced",
+      "name": "Python Programming",
+      "category": "Technical",
+      "description": "Advanced Python programming including frameworks and libraries",
+      "currentLevel": 4,
+      "targetLevel": 5,
+      "lastRatedDate": "2024-07-15",
+      "ratedBy": "MGR001",
+      "comments": "Strong Python skills, ready for advanced projects",
+      "status": "Strength",
+      "learningResources": {
+        "athenaLink": "https://athena.company.com/python-advanced",
+        "externalLink": "https://docs.python.org/3/tutorial/",
+        "books": ["Effective Python", "Python Tricks"]
+      }
+    },
+    {
+      "id": "oop_advanced", 
+      "name": "Object-Oriented Programming",
+      "category": "Technical",
+      "description": "Advanced OOP concepts and design principles",
+      "currentLevel": 4,
+      "targetLevel": 4,
+      "lastRatedDate": "2024-07-15",
+      "ratedBy": "MGR001",
+      "comments": "Excellent understanding of OOP principles",
+      "status": "Strength"
+    },
+    {
+      "id": "rest_apis_advanced",
+      "name": "REST APIs",
+      "category": "Technical", 
+      "description": "Design and implementation of RESTful web services",
+      "currentLevel": 4,
+      "targetLevel": 4,
+      "lastRatedDate": "2024-07-10",
+      "ratedBy": "MGR001",
+      "comments": "Strong API design skills",
+      "status": "Strength"
+    },
+    {
+      "id": "debugging_proficient",
+      "name": "Debugging",
+      "category": "Technical",
+      "description": "Systematic debugging and troubleshooting skills",
+      "currentLevel": 3,
+      "targetLevel": 4,
+      "lastRatedDate": "2024-06-20",
+      "ratedBy": "MGR001", 
+      "comments": "Good debugging skills, can work independently",
+      "status": "Skilled"
+    },
+    {
+      "id": "git_proficient",
+      "name": "Git Version Control",
+      "category": "Technical",
+      "description": "Version control using Git and collaboration workflows",
+      "currentLevel": 3,
+      "targetLevel": 3,
+      "lastRatedDate": "2024-06-15",
+      "ratedBy": "MGR001",
+      "comments": "Comfortable with Git workflows",
+      "status": "Skilled"
+    },
+    {
+      "id": "microservices_basic",
+      "name": "Microservices Architecture",
+      "category": "Technical",
+      "description": "Understanding and implementation of microservices patterns",
+      "currentLevel": 2,
+      "targetLevel": 3,
+      "lastRatedDate": "2024-05-30",
+      "ratedBy": "MGR001",
+      "comments": "Needs more hands-on experience with microservices",
+      "status": "Opportunity"
+    },
+    {
+      "id": "design_patterns_basic",
+      "name": "Design Patterns",
+      "category": "Technical",
+      "description": "Common software design patterns and their applications",
+      "currentLevel": 2,
+      "targetLevel": 3,
+      "lastRatedDate": "2024-05-25",
+      "ratedBy": "MGR001",
+      "comments": "Basic understanding, needs practical application",
+      "status": "Opportunity"
+    },
+    {
+      "id": "cloud_advanced",
+      "name": "Cloud Technologies",
+      "category": "Technical",
+      "description": "Cloud platforms, services, and deployment strategies",
+      "currentLevel": 3,
+      "targetLevel": 4,
+      "lastRatedDate": "2024-07-01",
+      "ratedBy": "MGR001",
+      "comments": "Good cloud knowledge, expanding to advanced concepts",
+      "status": "Skilled"
+    }
+  ]
+}

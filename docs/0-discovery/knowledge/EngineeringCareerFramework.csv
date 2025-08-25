@@ -1,0 +1,150 @@
+,Title,Technical Trainee (0+),,,Software Engineer - L1 (1+ years),,,Software Engineer - L2 (3+ years),,,Senior Software Engineer - L1 (5+ years),,,Senior Software Engineer - L2 (7+  years),,,Technology Solutions Lead - L1 (10+ years),,,Technology Solutions Lead - L2 (12+ years),,
+,Scope,Within Task,,,Within Task,,,Within Task,,,Within Epic,,,Within Epic,,,Within Team,,,Within Task & team's business stakeholder,,
+Key Area,Theme,KRA,KPI,Skills,KRA,KPI,Skills,KRA,KPI,Skills,KRA,KPI,Skills,KRA,KPI,Skills,KRA,KPI,Skills,KRA,KPI,Skills
+Technical,"Quality
+",1. Writes good and maintainable code,"2. Defect Rate
+3. Code churn","1. Programming Language [Basic],
+2. Git, Linux & SQL [Basic]
+3. Rest APIs [Basic]
+4. Debugging [Basic]
+5. AI and prompt engineering [Basic]
+6. DBMS [Basic]
+7. Cloud [Basic]","1.Writes code with testability, readability, edge cases, and errors in mind.
+2. Knows the testing pyramid. Writes unit tests, sometimes with help from more senior engineers.
+
+","Defect Rate
+Code Coverage
+Code Churn","Programming Language [Proficient],
+OOPs [Proficient]
+Rest APIs [Advance] 
+Flask and Django [Proficient]
+Debugging [Proficient]
+AI and prompt engineering [Advance]
+DBMS [Proficient]
+Cloud [Proficient]","1. Understands the testing pyramid, writes unit tests in accordance with it
+2. Always tests expected edge cases and errors as well as the happy path.
+","Defect Rate
+Code Coverage","Programming Language [Advance]
+OOPs [Advance]
+Design patterns [Basic]
+Microservices [Basic]
+Frameworks  & tools [Basic]
+Performance Tunning [Basic]","1. Consistently writes production-ready code
+2. Understands when it is appropriate to leave comments, but biases towards self-documenting code.
+3.  Always writes tests to handle expected edge cases and errors gracefully","Defect Rate
+Code Coverage
+","Microservices / Frameworks  & tools [Advance]
+Design Patterns [Advance]
+Domain Driven Design [Basic]
+
+","1. Consistently writes production-ready code
+2. Understands their team's testing approach, and uses quality metrics to identify gaps","Defect Rate
+Code Coverage
+","Cloud [Advance]
+Domain Driven Design [Advance]
+
+
+","1. Advises the team on quality of code, tests & documentation","Sprint Velocity
+Sprint Spillover",,1. Advises their team and other teams on best practices for code,"Sprint Velocity
+Sprint Spillover",
+, Architecture & System,1. Understand high level service architecture,,,"1. Aware of overall service architecture.
+2. Understands the importance of security. ",,,1. Designs functions that are aligned with the overall service architecture,,,"1. Good architectural design & approach experience
+2. Consistently designs code that is aligned with the overall service architecture. 
+3. Utilizes abstractions and code isolation effectively.",,"Performance Tunning [Basic]
+System architecture (Scalabilty and reliability) [Basic]","1. Strong architectural design & approach experience 
+2. Good intuition for code interface design",,"Performance Tunning [Proficient]
+System architecture (Scalabilty and reliability) [Proficient]","1. Understands and plans with technical debt in mind
+2. Can solve nearly all performance and data issues within the context of their team",SLA Compliance Rate,"System architecture (Scalabilty and reliability) [Proficient]
+Performance Tunning [Advance]
+Enterprise soultion and architecture [Basic]","1. Works with Architecture team regularly to define & refine cross-team architectural approaches with extensive experience & sharing.
+2. Can solve nearly all performance and data issues within the context of multiple teams",SLA Compliance Rate,"Enterprise soultion and architecture [Proficient]
+Data governance [Basic]
+"
+,Monitoring and observability,,,,1. Understands the basics of debugging and the tools used for it.,Change Failure Rate,,"1. Aware about the Monitoring and observability of team's domain
+2. Recognize technical debt",,,"1. Proficient at using systematic debugging to diagnose all issues located to a single service
+2. Helps tune and change the monitoring on their team accordingly.
+3. Can do multi-application and multi-layer profiling alone and optimize almost all offenders.
+4. Proactively identifies risks for production issues and works with stakeholders to resolve.","Bug Agening
+Time to Triage",,"1. Proficient at using systematic debugging to diagnose all issues within the scope of their domain.
+2. Suggesting stability and performance improvements.","Bug Agening
+Time to Triage","
+SRE (Site Reliabilty Enginnering) [Basic]","1. Creates new tools when necessary (and avoids doing so when not) to instrument and monitor systems
+2.  Driving changes to the team's services to achieve stability and performance improvements.","Service Availability and Reliability
+Incident Frequency
+Mean Time to Resolve",SRE (Site Reliabilty Enginnering) [Proficient],"1. Defines, realigns and understands cross-functional and cross-org implications of team's monitoring
+2. Acts as a primary mentor on running systems for the rest of their team
+3. Leads definition & refinement of team on-call or escalation procedures.","Service Availability and Reliability
+Incident Frequency
+Mean Time to Resolve",SRE (Site Reliabilty Enginnering) [Advance]
+Delivery & Accountability,Task / Project management,"1. Accomplishes tasks within an acceptable time frame
+2. Acts according to task prioritisation
+","1. Ticket Resolution
+2. Sprint velocity","1. Agile  methodologies [Basic]
+2. Software development lifecycle,
+","1. Understands value of rightsizing tasks to enable continuous integration and incremental delivery.
+2. Can estimate work tasks with help from teammates & manager
+
+","Sprint Velocity
+Code Commits Frequency
+Deployment Frequency","Agile  methodologies [Proficient]
+","1. Before beginning work, ensures that tasks are appropriately sized.
+2. Understands and acts according to task prioritisation. Notes dependencies.
+3. Usually handles risk, change, and uncertainty within their personal scope of work effectively. ","Ticket Resolution
+Sprint Velocity","Agile  methodologies [Advance]
+Software development lifecycle,
+","1. Reviews tasks critically and ensures they’re appropriately sized
+2. Handles risk, change, and uncertainty within their personal scope of work effectively.
+","Ticket Resolution
+Sprint Velocity","Project Management [Basic]
+","1. Maintains a strongly consistent personal velocity of work tasks.
+2. Knows when to conclude conversations, meetings, and pre-work tasks in order to complete work on time.
+3. Thoroughly vets work requirements and helps refine them to fulfill the intent of the requirements.","Ticket Resolution
+Sprint Velocity","Project Management [Proficient]
+
+","1. Reviews epics and projects critically and ensures they’re appropriately broken down and prioritised, and well understood by the team.
+2. At task and epic level, works within their team to foster a culture of priority setting and urgency in alignment with organizational strategy.","Deployment Frequency
+Net Promoter Score","Product Management [Advance]
+Solution Risk management [Basic]
+","1. Reviews cross-team work critically and ensures it’s appropriately broken down and prioritised, and well understood by all involved teams.
+2. Effectively handles risk, change, and uncertainty across several teams","Deployment Frequency
+Net Promoter Score","Change management [Proficient]
+Solution Risk management [Proficient]"
+,Self-Management,"1. Adhere to Company's Culture, tools and compliance
+2. Knows how to ask good questions of their teammates",1. Training completion Rate,,"1. Participates in team on-call 
+2. Participates in follow-up retrospectives
+3. Dives into new projects & technologies with curiosity and drive to understand",,,"1. Escalates any blockers, delays, and cost ballooning to their team daily
+2. Commits to a realistic amount of work,",,,"1. Ensures their commitments are realistic, understands their priority and urgency, and delivers upon them accordingly
+2. When taking action, weighs cost and value in order to take the most economic action
+3. Understands, negotiates & applies work priorities correctly.",,,"1. Anticipates and communicates blockers, delays, and cost ballooning for their work before they require escalation
+2. Uses economic thinking in their own work, and to make suggestions to teammates.
+",,,"1. Anticipates and communicates blockers, delays, and cost ballooning within their team’s projects, before they require escalation
+2. Leverages own abilities and practices to mentor and improve the productivity of the entire team.",,,"1.  Successfully manages cross-team commitments, their progress, and roadmap to delivery
+2. Successfully manages cross-team commitments and work completion.",,
+Communication & Collaboration,Stakeholder Management,"1. Understands how to deliver praise and constructive feedback in a useful manner.
+2. Communicates effectively, clearly, concisely and in an audience-oriented way, in written and verbal form.
+3. Pays attention to nonverbal communication.",1. Rating from mentors,1. Project Management [Basic],"1. Avoids surprising stakeholders whenever project expectations change; communicates changes early and often.
+2. Consistently communicates with project stakeholders about expectations
+4. Communicates accurately about all technical subjects in their work.
+5. Fully embraces team solutions and commits to delivery without issue
+",Ratings from Peers and mentors,,"1. Escalates any blockers, delays, and cost ballooning to their team daily",Feedback from mentors and peers,,"1. Can usually explain technical subjects to non-technical teammates.
+2. Approaches disagreement with inquisitiveness, empathy and the goal of a stronger solution
+3. Guides team toward a decision, clarifies and gets buy-in, and holds self & teammates accountable for decision.
+4. Delivers feedback to their team's business stakeholders when opportunities arise. 
+5.  Encourages their teammates to openly share their opinions and contribute to discussions",Feedback from peers and mentors,,"1. Communicates effectively, clearly, concisely in written and verbal form both technical and non technical subjects, and in an audience-oriented way.
+2. Helps their teammates overcome obstacles, resolve blockers, and complete work tasks.",Feedback from peers and mentors,,1. Proactively identifies risks for production issues and works with stakeholders to resolve.,Feedback from all stakeholders,,"1. Communicates about production issues effectively with public & leadership.
+2. Fosters a culture within their team where people are encouraged to share their opinions and contribute to discussions in a respectful manner, approach disagreement non-defensively",Feedback from all stakeholders,
+,Documentation,,,,"1. Openly shares their opinions and contributes to discussions in a respectful manner
+2. Understands their area of work and shares their knowledge frequently with their teammates.",,,"1. Adds new and relevant documentation to existing repositories of knowledge.
+2. Contributes to their team's documentation. Watches out for opportunities to share knowledge.",,,"1. Understands their team's domain, shares their knowledge frequently with their teammates and contributes to their team's documentation",,,1. Often adds new and relevant documentation to existing repositories of knowledge.,,,"1. Understands the organizational value of great documentation and spends time to maintain, update and extend existing repositories of knowledge.
+",,,"1. Creates & structures documentation for large code projects concisely & consistently.
+",,
+Leadership,Mentorship,,,,,,,,,,"1.  Mentors teammates one-on-one with or without prompting.
+2. Always treats mentored teammates with respect and kindness, regardless of their experience.",,,1. Seeks out mentoring opportunities specifically to create team redundancy and backfill ability.,,,"1. Mentors their teammates in an open, respectful, flexible, empathetic manner.
+2. Seeks out mentoring opportunities specifically to create team redundancy and backfill ability. ",Team Hiring and Upskilling,,"1. Mentors their teammates in an open, respectful, flexible, empathetic manner.
+2. Seeks out mentoring opportunities specifically to create team redundancy and backfill ability. 
+3. Mentors members of other teams as needed. ",Team Hiring and Upskilling,
+,Vision / Technical Strategy Mapping,,,,,,,,,,,,,,,,1. Articulates a coherent future vision for whole systems and several components for which they have responsibility.,,,"1. Articulates a coherent future vision for many systems tended by their team.
+2. Often assists teammates with building and articulating visions for their responsibility areas.",,Technical leadership [Basic]
+,Decision Making,,,,,,,,,,,,,,,,,,,"1. Takes ownership of decisions made in their team by helping their teammates make clear decisions in alignment with organizational goals, backing decisions made, and taking responsibility for their success.",,
+,Driving Alignments,,,,,,,,,,,,,,,,,,,1. Fosters a culture within their team of having conversations based on organizational strategy and principles to create alignment. Strongly oriented towards goals and ensures their team is continuously working towards their goals.,,
+Strategic Impact,Impact,,,,,,,,,,,,,,,,,,,,,

@@ -1,0 +1,204 @@
+{
+  "manager": {
+    "id": "MGR001",
+    "name": "Sarah Johnson",
+    "email": "sarah.johnson@company.com",
+    "phone": "+1-555-0456",
+    "designation": "Engineering Manager",
+    "department": "Engineering",
+    "location": "San Francisco, CA",
+    "profilePicture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    "teamSize": 8,
+    "directReports": ["EMP001", "EMP002", "EMP003", "EMP004"],
+    "indirectReports": ["EMP005", "EMP006", "EMP007", "EMP008"]
+  },
+  "teamMembers": [
+    {
+      "id": "EMP001",
+      "name": "John Doe",
+      "designation": "Software Engineer - L2",
+      "department": "Engineering",
+      "profilePicture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      "reportingTo": "MGR001",
+      "opportunityCount": 2,
+      "strengthCount": 3,
+      "skilledCount": 3,
+      "isDirect": true,
+      "skills": [
+        {"id": "python_advanced", "level": 4, "status": "Strength"},
+        {"id": "oop_advanced", "level": 4, "status": "Strength"},
+        {"id": "rest_apis_advanced", "level": 4, "status": "Strength"},
+        {"id": "debugging_proficient", "level": 3, "status": "Skilled"},
+        {"id": "git_proficient", "level": 3, "status": "Skilled"},
+        {"id": "cloud_advanced", "level": 3, "status": "Skilled"},
+        {"id": "microservices_basic", "level": 2, "status": "Opportunity"},
+        {"id": "design_patterns_basic", "level": 2, "status": "Opportunity"}
+      ]
+    },
+    {
+      "id": "EMP002",
+      "name": "Emily Chen",
+      "designation": "Software Engineer - L1",
+      "department": "Engineering",
+      "profilePicture": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      "reportingTo": "MGR001",
+      "opportunityCount": 4,
+      "strengthCount": 1,
+      "skilledCount": 2,
+      "isDirect": true,
+      "skills": [
+        {"id": "python_advanced", "level": 3, "status": "Skilled"},
+        {"id": "oop_advanced", "level": 3, "status": "Skilled"},
+        {"id": "rest_apis_advanced", "level": 4, "status": "Strength"},
+        {"id": "debugging_proficient", "level": 2, "status": "Opportunity"},
+        {"id": "git_proficient", "level": 2, "status": "Opportunity"},
+        {"id": "microservices_basic", "level": 1, "status": "Opportunity"},
+        {"id": "design_patterns_basic", "level": 1, "status": "Opportunity"}
+      ]
+    },
+    {
+      "id": "EMP003",
+      "name": "Michael Rodriguez",
+      "designation": "Senior Software Engineer - L1",
+      "department": "Engineering",
+      "profilePicture": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      "reportingTo": "MGR001",
+      "opportunityCount": 1,
+      "strengthCount": 5,
+      "skilledCount": 2,
+      "isDirect": true,
+      "skills": [
+        {"id": "python_advanced", "level": 5, "status": "Strength"},
+        {"id": "oop_advanced", "level": 4, "status": "Strength"},
+        {"id": "rest_apis_advanced", "level": 5, "status": "Strength"},
+        {"id": "debugging_proficient", "level": 4, "status": "Strength"},
+        {"id": "git_proficient", "level": 4, "status": "Strength"},
+        {"id": "cloud_advanced", "level": 3, "status": "Skilled"},
+        {"id": "microservices_basic", "level": 3, "status": "Skilled"},
+        {"id": "design_patterns_basic", "level": 2, "status": "Opportunity"}
+      ]
+    },
+    {
+      "id": "EMP004",
+      "name": "Lisa Wang",
+      "designation": "Software Engineer - L2",
+      "department": "Engineering",
+      "profilePicture": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+      "reportingTo": "MGR001",
+      "opportunityCount": 3,
+      "strengthCount": 2,
+      "skilledCount": 3,
+      "isDirect": true,
+      "skills": [
+        {"id": "python_advanced", "level": 4, "status": "Strength"},
+        {"id": "oop_advanced", "level": 3, "status": "Skilled"},
+        {"id": "rest_apis_advanced", "level": 4, "status": "Strength"},
+        {"id": "debugging_proficient", "level": 3, "status": "Skilled"},
+        {"id": "git_proficient", "level": 3, "status": "Skilled"},
+        {"id": "cloud_advanced", "level": 2, "status": "Opportunity"},
+        {"id": "microservices_basic", "level": 2, "status": "Opportunity"},
+        {"id": "design_patterns_basic", "level": 1, "status": "Opportunity"}
+      ]
+    }
+  ],
+  "skillUpdateRequests": [
+    {
+      "id": "REQ001",
+      "employeeId": "EMP001",
+      "employeeName": "John Doe",
+      "skillId": "microservices_basic",
+      "skillName": "Microservices Architecture",
+      "currentLevel": 2,
+      "requestedLevel": 3,
+      "requestDate": "2024-08-20",
+      "justification": "Completed microservices workshop and successfully implemented a service in the current sprint",
+      "status": "Pending",
+      "evidence": "Link to implemented service in GitLab"
+    },
+    {
+      "id": "REQ002",
+      "employeeId": "EMP002",
+      "employeeName": "Emily Chen",
+      "skillId": "debugging_proficient",
+      "skillName": "Debugging",
+      "currentLevel": 2,
+      "requestedLevel": 3,
+      "requestDate": "2024-08-18",
+      "justification": "Successfully debugged complex production issues without assistance over the past month",
+      "status": "Pending",
+      "evidence": "Production incident reports and resolution documentation"
+    }
+  ],
+  "globalSkills": [
+    {
+      "id": "python_advanced",
+      "name": "Python Programming",
+      "category": "Technical",
+      "description": "Advanced Python programming including frameworks and libraries",
+      "isActive": true
+    },
+    {
+      "id": "oop_advanced",
+      "name": "Object-Oriented Programming",
+      "category": "Technical",
+      "description": "Advanced OOP concepts and design principles",
+      "isActive": true
+    },
+    {
+      "id": "rest_apis_advanced",
+      "name": "REST APIs",
+      "category": "Technical",
+      "description": "Design and implementation of RESTful web services",
+      "isActive": true
+    },
+    {
+      "id": "debugging_proficient",
+      "name": "Debugging",
+      "category": "Technical",
+      "description": "Systematic debugging and troubleshooting skills",
+      "isActive": true
+    },
+    {
+      "id": "git_proficient",
+      "name": "Git Version Control",
+      "category": "Technical",
+      "description": "Version control using Git and collaboration workflows",
+      "isActive": true
+    },
+    {
+      "id": "microservices_basic",
+      "name": "Microservices Architecture",
+      "category": "Technical",
+      "description": "Understanding and implementation of microservices patterns",
+      "isActive": true
+    },
+    {
+      "id": "design_patterns_basic",
+      "name": "Design Patterns",
+      "category": "Technical",
+      "description": "Common software design patterns and their applications",
+      "isActive": true
+    },
+    {
+      "id": "cloud_advanced",
+      "name": "Cloud Technologies",
+      "category": "Technical",
+      "description": "Cloud platforms, services, and deployment strategies",
+      "isActive": true
+    },
+    {
+      "id": "leadership_basic",
+      "name": "Leadership Skills",
+      "category": "Behavioral",
+      "description": "Team leadership and people management capabilities",
+      "isActive": true
+    },
+    {
+      "id": "communication_advanced",
+      "name": "Communication",
+      "category": "Behavioral",
+      "description": "Effective verbal and written communication skills",
+      "isActive": true
+    }
+  ]
+}

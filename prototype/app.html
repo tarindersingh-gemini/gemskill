@@ -1,0 +1,2500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GemSkill - Skill Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#0ea5e9',
+                        accent: '#8b5cf6',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans" x-data="skillManagementApp()">
+    <!-- User Type Selection Screen -->
+    <div x-show="!userType" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <img src="logo.png" alt="GemSkill Logo" class="h-16 w-auto mx-auto mb-6">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">GemSkill</h1>
+                <p class="text-xl text-gray-600">Skill Management & Development Platform</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Employee Card -->
+                <div @click="selectUserType('employee')" class="bg-white rounded-lg shadow-lg p-8 cursor-pointer hover:shadow-xl transition-shadow border-2 border-transparent hover:border-blue-500">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-user text-3xl text-blue-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Employee</h3>
+                        <p class="text-gray-600 mb-4">View your skill profile, track development plans, and manage your career growth.</p>
+                        <ul class="text-sm text-gray-500 space-y-1">
+                            <li>• View skill assessments</li>
+                            <li>• Track development plans</li>
+                            <li>• Request skill updates</li>
+                            <li>• Manage certifications</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Manager Card -->
+                <div @click="selectUserType('manager')" class="bg-white rounded-lg shadow-lg p-8 cursor-pointer hover:shadow-xl transition-shadow border-2 border-transparent hover:border-green-500">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-users text-3xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Manager</h3>
+                        <p class="text-gray-600 mb-4">Oversee team skills, approve updates, and manage development plans.</p>
+                        <ul class="text-sm text-gray-500 space-y-1">
+                            <li>• Team skill overview</li>
+                            <li>• Rate team members</li>
+                            <li>• Approve skill requests</li>
+                            <li>• Assign skills</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- HR/Admin Card -->
+                <div @click="selectUserType('hr')" class="bg-white rounded-lg shadow-lg p-8 cursor-pointer hover:shadow-xl transition-shadow border-2 border-transparent hover:border-purple-500">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-cog text-3xl text-purple-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">HR/Admin</h3>
+                        <p class="text-gray-600 mb-4">Manage global skills database, generate reports, and system administration.</p>
+                        <ul class="text-sm text-gray-500 space-y-1">
+                            <li>• Global skill management</li>
+                            <li>• Generate reports</li>
+                            <li>• System administration</li>
+                            <li>• Analytics dashboard</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div x-show="userType" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <img src="logo.png" alt="GemSkill Logo" class="h-8 w-auto mr-3">
+                        <h1 class="text-xl font-bold text-gray-900">GemSkill</h1>
+                        <span x-show="userType" class="ml-4 px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700 capitalize" x-text="userType + ' Dashboard'"></span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-600">
+                            Welcome, <span class="font-medium" x-text="getCurrentUser().name"></span>
+                        </div>
+                        <button @click="logout()" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Employee Dashboard -->
+        <div x-show="userType === 'employee'" x-data="employeeDashboard()" x-init="init()">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- Header -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <img :src="employee.profilePicture" :alt="employee.name" class="w-16 h-16 rounded-full object-cover">
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-900" x-text="employee.name"></h2>
+                                <p class="text-sm text-gray-600" x-text="employee.designation"></p>
+                                <p class="text-sm text-gray-500" x-text="employee.department + ' • ' + employee.location"></p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-edit mr-2"></i>Edit Profile
+                            </button>
+                            <button @click="$parent.userType = null" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors">
+                                Back to Selection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <div class="border-b border-gray-200 mb-8">
+                    <nav class="-mb-px flex space-x-8">
+                        <button @click="activeTab = 'profile'" :class="activeTab === 'profile' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
+                            <i class="fas fa-user mr-2"></i>Profile
+                        </button>
+                        <button @click="activeTab = 'assessment'" :class="activeTab === 'assessment' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
+                            <i class="fas fa-chart-bar mr-2"></i>Skill Assessment
+                        </button>
+                        <button @click="activeTab = 'development'" :class="activeTab === 'development' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
+                            <i class="fas fa-road mr-2"></i>Development Plan
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="min-h-96">
+                    <!-- Profile Tab -->
+                    <div x-show="activeTab === 'profile'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                        <!-- Employee Overview -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Employee Overview</h3>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Personal Information -->
+                                <div>
+                                    <h4 class="text-md font-medium text-gray-900 mb-4">Personal Information</h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center">
+                                            <img :src="employee.profilePicture" :alt="employee.name" class="w-20 h-20 rounded-full object-cover mr-4">
+                                            <div>
+                                                <h3 class="text-lg font-semibold text-gray-900" x-text="employee.name"></h3>
+                                                <p class="text-sm text-gray-600" x-text="employee.designation"></p>
+                                            </div>
+                                        </div>
+                                        <div><span class="font-medium">Email:</span> <span x-text="employee.email"></span></div>
+                                        <div><span class="font-medium">Phone:</span> <span x-text="employee.phone"></span></div>
+                                        <div><span class="font-medium">Department:</span> <span x-text="employee.department"></span></div>
+                                        <div><span class="font-medium">Location:</span> <span x-text="employee.location"></span></div>
+                                    </div>
+                                </div>
+
+                                <!-- Quick Stats -->
+                                <div>
+                                    <h4 class="text-md font-medium text-gray-900 mb-4">Quick Stats</h4>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="bg-blue-50 p-4 rounded-lg">
+                                            <div class="text-2xl font-bold text-blue-600" x-text="skills.length"></div>
+                                            <div class="text-sm text-blue-700">Total Skills</div>
+                                        </div>
+                                        <div class="bg-green-50 p-4 rounded-lg">
+                                            <div class="text-2xl font-bold text-green-600" x-text="getSkillsByStatus('Strength').length"></div>
+                                            <div class="text-sm text-green-700">Strengths</div>
+                                        </div>
+                                        <div class="bg-yellow-50 p-4 rounded-lg">
+                                            <div class="text-2xl font-bold text-yellow-600" x-text="getSkillsByStatus('Opportunity').length"></div>
+                                            <div class="text-sm text-yellow-700">Opportunities</div>
+                                        </div>
+                                        <div class="bg-purple-50 p-4 rounded-lg">
+                                            <div class="text-2xl font-bold text-purple-600" x-text="employee.certifications?.length || 0"></div>
+                                            <div class="text-sm text-purple-700">Certifications</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Education -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Education</h3>
+                            <div class="space-y-4">
+                                <template x-for="education in employee.education" :key="education.degree">
+                                    <div class="border-l-4 border-blue-500 pl-4">
+                                        <h4 class="font-medium text-gray-900" x-text="education.degree"></h4>
+                                        <p class="text-sm text-gray-600" x-text="education.institution"></p>
+                                        <p class="text-xs text-gray-500" x-text="education.year"></p>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Experience -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Experience</h3>
+                            <div class="space-y-4">
+                                <template x-for="experience in employee.experience" :key="experience.company">
+                                    <div class="border-l-4 border-green-500 pl-4">
+                                        <h4 class="font-medium text-gray-900" x-text="experience.position"></h4>
+                                        <p class="text-sm text-gray-600" x-text="experience.company"></p>
+                                        <p class="text-xs text-gray-500 mb-2" x-text="experience.duration"></p>
+                                        <p class="text-sm text-gray-700" x-text="experience.description"></p>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Certifications -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Certifications</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <template x-for="cert in employee.certifications" :key="cert.name">
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                        <h4 class="font-medium text-gray-900" x-text="cert.name"></h4>
+                                        <p class="text-sm text-gray-600" x-text="cert.issuer"></p>
+                                        <div class="flex justify-between items-center mt-2">
+                                            <span class="text-xs text-gray-500" x-text="cert.date"></span>
+                                            <a :href="cert.verificationLink" class="text-xs text-primary hover:text-blue-700">Verify</a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Assessment Tab -->
+                    <div x-show="activeTab === 'assessment'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                        <!-- Job Description Section -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Job Description</h3>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                                <!-- Job Role Overview -->
+                                <div>
+                                    <h4 class="text-md font-medium text-gray-900 mb-4">Job Role Overview</h4>
+                                    <div class="space-y-3">
+                                        <div><span class="font-medium">Role:</span> <span x-text="jobRole.name"></span></div>
+                                        <div><span class="font-medium">ID:</span> <span x-text="jobRole.id"></span></div>
+                                        <div><span class="font-medium">Level:</span> <span x-text="jobRole.level"></span></div>
+                                        <div><span class="font-medium">Location:</span> <span x-text="jobRole.location"></span></div>
+                                        <div><span class="font-medium">Employment:</span> <span x-text="jobRole.employmentType"></span></div>
+                                    </div>
+                                    <p class="text-gray-700 mt-4" x-text="jobRole.description"></p>
+                                </div>
+
+                                <!-- Key Responsibilities and KPIs -->
+                                <div>
+                                    <h4 class="text-md font-medium text-gray-900 mb-4">Key Responsibilities</h4>
+                                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 mb-4">
+                                        <template x-for="responsibility in jobRole.keyResponsibilities" :key="responsibility">
+                                            <li x-text="responsibility"></li>
+                                        </template>
+                                    </ul>
+                                    
+                                    <h4 class="text-md font-medium text-gray-900 mb-2">Key Performance Indicators</h4>
+                                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700">
+                                        <template x-for="kpi in jobRole.kpis" :key="kpi">
+                                            <li x-text="kpi"></li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Skills Required Section -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <!-- Mandatory Skills -->
+                                <div>
+                                    <h4 class="text-md font-medium text-gray-900 mb-4 flex items-center">
+                                        <i class="fas fa-star text-red-500 mr-2"></i>Mandatory Skills
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <template x-for="skillId in (jobRole.mandatorySkills || [])" :key="skillId">
+                                            <div x-data="{ skill: skills.find(s => s.id === skillId) }" class="bg-red-50 border border-red-200 rounded-lg p-3">
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <span class="font-medium text-gray-900" x-text="skill?.name || 'Loading...'"></span>
+                                                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Required</span>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                                                        <span>Current Proficiency</span>
+                                                        <span x-text="(skill?.currentLevel || 0) + '/5'"></span>
+                                                    </div>
+                                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                                        <div :class="getProgressBarClass(skill?.currentLevel || 0)" :style="'width: ' + ((skill?.currentLevel || 0) * 20) + '%'" class="h-2 rounded-full transition-all duration-300"></div>
+                                                    </div>
+                                                </div>
+                                                <p class="text-xs text-gray-600" x-text="skill?.description || 'Skill description loading...'"></p>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- Desired Skills -->
+                                <div>
+                                    <h4 class="text-md font-medium text-gray-900 mb-4 flex items-center">
+                                        <i class="fas fa-heart text-blue-500 mr-2"></i>Desired Skills
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <template x-for="skillId in (jobRole.desiredSkills || [])" :key="skillId">
+                                            <div x-data="{ skill: skills.find(s => s.id === skillId) }" class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <span class="font-medium text-gray-900" x-text="skill?.name || 'Loading...'"></span>
+                                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Beneficial</span>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                                                        <span>Current Proficiency</span>
+                                                        <span x-text="(skill?.currentLevel || 0) + '/5'"></span>
+                                                    </div>
+                                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                                        <div :class="getProgressBarClass(skill?.currentLevel || 0)" :style="'width: ' + ((skill?.currentLevel || 0) * 20) + '%'" class="h-2 rounded-full transition-all duration-300"></div>
+                                                    </div>
+                                                </div>
+                                                <p class="text-xs text-gray-600" x-text="skill?.description || 'Skill description loading...'"></p>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Assessment Section -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-lg font-semibold text-gray-900">Skill Assessment</h3>
+                                <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                                    <i class="fas fa-edit mr-2"></i>Request Skill Update
+                                </button>
+                            </div>
+
+                            <!-- Skill Overview -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-green-600" x-text="getSkillsByStatus('Strength').length"></div>
+                                    <div class="text-sm text-green-700">Strengths</div>
+                                    <div class="text-xs text-green-600">Rating 4+</div>
+                                </div>
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-blue-600" x-text="getSkillsByStatus('Skilled').length"></div>
+                                    <div class="text-sm text-blue-700">Skilled</div>
+                                    <div class="text-xs text-blue-600">Rating 3</div>
+                                </div>
+                                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-orange-600" x-text="getSkillsByStatus('Opportunity').length"></div>
+                                    <div class="text-sm text-orange-700">Opportunities</div>
+                                    <div class="text-xs text-orange-600">Rating ≤2</div>
+                                </div>
+                            </div>
+
+                            <!-- Rating Scale Reference -->
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                                <h4 class="text-sm font-medium text-gray-900 mb-3 flex items-center">
+                                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>Skill Rating Scale
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+                                    <div class="flex items-center">
+                                        <span class="inline-flex items-center justify-center w-6 h-6 bg-red-100 text-red-800 rounded-full font-medium mr-2">1</span>
+                                        <span class="text-gray-700">No experience at all</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="inline-flex items-center justify-center w-6 h-6 bg-orange-100 text-orange-800 rounded-full font-medium mr-2">2</span>
+                                        <span class="text-gray-700">Training received</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="inline-flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-800 rounded-full font-medium mr-2">3</span>
+                                        <span class="text-gray-700">Can perform tasks under supervision</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="inline-flex items-center justify-center w-6 h-6 bg-green-100 text-green-800 rounded-full font-medium mr-2">4</span>
+                                        <span class="text-gray-700">Doesn't require supervision</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="inline-flex items-center justify-center w-6 h-6 bg-green-200 text-green-900 rounded-full font-medium mr-2">5</span>
+                                        <span class="text-gray-700">Can train other team members</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Skills Filter -->
+                            <div class="mb-6">
+                                <div class="flex flex-col sm:flex-row gap-4">
+                                    <div class="flex-1">
+                                        <input type="text" x-model="skillFilter" placeholder="Search skills..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    </div>
+                                    <select x-model="statusFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">All Skills</option>
+                                        <option value="Strength">Strengths</option>
+                                        <option value="Skilled">Skilled</option>
+                                        <option value="Opportunity">Opportunities</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Skills List -->
+                            <div class="space-y-4">
+                                <template x-for="skill in filteredSkills" :key="skill.id">
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                        <div class="flex justify-between items-start mb-3">
+                                            <div>
+                                                <h4 class="font-medium text-gray-900" x-text="skill.name"></h4>
+                                                <p class="text-sm text-gray-600" x-text="skill.description"></p>
+                                            </div>
+                                            <span :class="getStatusBadgeClass(skill.status)" class="px-2 py-1 text-xs font-medium rounded-full" x-text="skill.status"></span>
+                                        </div>
+                                        
+                                        <!-- Skill Level Progress Bar -->
+                                        <div class="mb-3">
+                                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                                <span>Current Level</span>
+                                                <span x-text="skill.currentLevel + '/5'"></span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div :class="getProgressBarClass(skill.currentLevel)" :style="'width: ' + (skill.currentLevel * 20) + '%'" class="h-2 rounded-full transition-all duration-300"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="text-xs text-gray-500">
+                                            <span>Last rated: </span><span x-text="formatDate(skill.lastRatedDate)"></span>
+                                            <span class="ml-4">Comments: </span><span x-text="skill.comments"></span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Career Development Plan Tab -->
+                    <div x-show="activeTab === 'development'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                        <!-- Development Plan Summary -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Development Plan Summary</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-blue-600" x-text="developmentPlan.summary?.totalSkills || 0"></div>
+                                    <div class="text-sm text-blue-700">Total Skills</div>
+                                </div>
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-green-600" x-text="developmentPlan.summary?.completedSkills || 0"></div>
+                                    <div class="text-sm text-green-700">Completed</div>
+                                </div>
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-yellow-600" x-text="developmentPlan.summary?.inProgressSkills || 0"></div>
+                                    <div class="text-sm text-yellow-700">In Progress</div>
+                                </div>
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-gray-600" x-text="developmentPlan.summary?.notStartedSkills || 0"></div>
+                                    <div class="text-sm text-gray-700">Not Started</div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                <div>
+                                    <p><span class="font-medium">Status:</span> <span :class="developmentPlan.status === 'Active' ? 'text-green-600' : 'text-gray-600'" x-text="developmentPlan.status"></span></p>
+                                    <p><span class="font-medium">Duration:</span> <span x-text="formatDate(developmentPlan.startDate) + ' - ' + formatDate(developmentPlan.endDate)"></span></p>
+                                </div>
+                                <button class="mt-4 sm:mt-0 bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                                    <i class="fas fa-plus mr-2"></i>Add Development Activity
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Development Plan Skills -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Development Plan Skills</h3>
+                            
+                            <!-- Filter Controls -->
+                            <div class="mb-6">
+                                <div class="flex flex-col sm:flex-row gap-4">
+                                    <input type="text" x-model="devSkillFilter" placeholder="Search skills..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <select x-model="devStatusFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">All Status</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                    <select x-model="devProgressFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">All Progress</option>
+                                        <option value="Not Started">Not Started</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Skills Table -->
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Skill</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Level</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target Level</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timeline</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <template x-for="skill in filteredDevSkills" :key="skill.skillId">
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm font-medium text-gray-900" x-text="skill.skillName"></div>
+                                                    <div class="text-sm text-gray-500" x-text="'Assigned by: ' + skill.assignedBy"></div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800" x-text="skill.currentLevel"></span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" x-text="skill.targetLevel"></span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <div x-text="formatDate(skill.startDate)"></div>
+                                                    <div class="text-xs" x-text="'to ' + formatDate(skill.endDate)"></div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span :class="getProgressBadgeClass(skill.progress)" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" x-text="skill.progress"></span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <a :href="skill.courseLink" class="text-primary hover:text-blue-700 mr-3">
+                                                        <i class="fas fa-external-link-alt mr-1"></i>Course
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Development Activities -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Development Activities</h3>
+                            
+                            <div class="space-y-4">
+                                <template x-for="activity in developmentPlan.activities" :key="activity.id">
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                        <div class="flex justify-between items-start">
+                                            <div class="flex-1">
+                                                <h4 class="font-medium text-gray-900" x-text="activity.name"></h4>
+                                                <p class="text-sm text-gray-600 mt-1" x-text="activity.description"></p>
+                                                <div class="flex items-center mt-2 text-xs text-gray-500">
+                                                    <i class="fas fa-calendar mr-1"></i>
+                                                    <span x-text="formatDate(activity.scheduledDate)"></span>
+                                                    <span class="ml-4">Assigned by: </span>
+                                                    <span x-text="activity.assignedBy"></span>
+                                                </div>
+                                            </div>
+                                            <span :class="getProgressBadgeClass(activity.status)" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ml-4" x-text="activity.status"></span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manager Dashboard -->
+        <div x-show="userType === 'manager'" x-data="managerDashboard()">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- Tab Navigation -->
+                <div class="border-b border-gray-200 mb-8">
+                    <nav class="flex space-x-8" aria-label="Tabs">
+                        <button @click="activeTab = 'team'" 
+                                :class="activeTab === 'team' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
+                            <i class="fas fa-users mr-2"></i>Team Overview
+                        </button>
+                        <button @click="activeTab = 'skills'" 
+                                :class="activeTab === 'skills' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors">
+                            <i class="fas fa-cogs mr-2"></i>Skill Management
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Team Overview Tab -->
+                <div x-show="activeTab === 'team'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                    <!-- Team Summary -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Team Summary</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold text-blue-600" x-text="teamMembers.length"></div>
+                                <div class="text-sm text-blue-700">Total Team Members</div>
+                            </div>
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold text-green-600" x-text="getTeamMetrics().avgStrengths"></div>
+                                <div class="text-sm text-green-700">Avg Strengths</div>
+                            </div>
+                            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold text-orange-600" x-text="getTeamMetrics().totalOpportunities"></div>
+                                <div class="text-sm text-orange-700">Total Opportunities</div>
+                            </div>
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold text-purple-600" x-text="skillUpdateRequests.length"></div>
+                                <div class="text-sm text-purple-700">Pending Requests</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View Controls -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-md font-medium text-gray-900">Team View Options</h4>
+                            <div class="flex space-x-2">
+                                <button @click="teamViewMode = 'grid'" :class="teamViewMode === 'grid' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'" class="px-3 py-2 rounded-md transition-colors">
+                                    <i class="fas fa-th-large mr-2"></i>Grid View
+                                </button>
+                                <button @click="teamViewMode = 'tree'" :class="teamViewMode === 'tree' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'" class="px-3 py-2 rounded-md transition-colors">
+                                    <i class="fas fa-sitemap mr-2"></i>Org Tree
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Skill Status</label>
+                                <select x-model="skillStatusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">All Statuses</option>
+                                    <option value="high-opportunity">High Opportunities (3+)</option>
+                                    <option value="medium-opportunity">Medium Opportunities (1-2)</option>
+                                    <option value="high-strength">High Strengths (3+)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Search Team Member</label>
+                                <input type="text" x-model="memberSearchFilter" placeholder="Search by name..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            </div>
+                            <div class="flex items-end">
+                                <button @click="clearFilters()" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
+                                    <i class="fas fa-times mr-2"></i>Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Members Grid View -->
+                    <div x-show="teamViewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <template x-for="member in filteredTeamMembers" :key="member.id">
+                            <div @click="selectTeamMember(member)" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 cursor-pointer hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-4">
+                                    <img :src="member.profilePicture" :alt="member.name" class="w-12 h-12 rounded-full object-cover mr-4">
+                                    <div>
+                                        <h4 class="text-lg font-medium text-gray-900" x-text="member.name"></h4>
+                                        <p class="text-sm text-gray-600" x-text="member.designation"></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-3 gap-2 mb-4">
+                                    <div class="text-center">
+                                        <div class="text-lg font-bold text-green-600" x-text="member.strengthCount"></div>
+                                        <div class="text-xs text-green-700">Strengths</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-lg font-bold text-blue-600" x-text="member.skilledCount"></div>
+                                        <div class="text-xs text-blue-700">Skilled</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-lg font-bold text-orange-600" x-text="member.opportunityCount"></div>
+                                        <div class="text-xs text-orange-700">Opportunities</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-between items-center">
+                                    <span :class="member.isDirect ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'" class="px-2 py-1 rounded-full text-xs font-medium">
+                                        <span x-text="member.isDirect ? 'Direct Report' : 'Indirect Report'"></span>
+                                    </span>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Organizational Tree View -->
+                    <div x-show="teamViewMode === 'tree'" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                            <i class="fas fa-sitemap mr-2 text-primary"></i>
+                            Organizational Structure
+                        </h4>
+                        
+                        <!-- Manager Card (Root) -->
+                        <div class="mb-8">
+                            <div class="flex justify-center">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 shadow-lg max-w-sm">
+                                    <div class="flex items-center">
+                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face">
+                                        <div>
+                                            <h4 class="text-lg font-semibold">Sarah Johnson</h4>
+                                            <p class="text-blue-100 text-sm">Engineering Manager</p>
+                                            <p class="text-blue-200 text-xs">Team Lead</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 grid grid-cols-3 gap-3 text-center">
+                                        <div>
+                                            <div class="text-lg font-bold" x-text="getManagerStats().totalDirectReports"></div>
+                                            <div class="text-xs text-blue-200">Direct Reports</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-lg font-bold" x-text="getManagerStats().totalTeamSize"></div>
+                                            <div class="text-xs text-blue-200">Team Size</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-lg font-bold" x-text="getManagerStats().avgPerformance + '%'"></div>
+                                            <div class="text-xs text-blue-200">Avg Performance</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Connection Lines -->
+                        <div class="flex justify-center mb-4">
+                            <div class="w-0.5 h-8 bg-gray-300"></div>
+                        </div>
+
+                        <!-- Direct Reports Level -->
+                        <div class="relative">
+                            <!-- Horizontal connection line for direct reports -->
+                            <div class="absolute top-6 left-1/2 transform -translate-x-1/2 w-full h-0.5 bg-gray-300 z-0" 
+                                 x-show="getFilteredDirectReports().length > 1"></div>
+                            
+                            <div class="grid gap-8 z-10 relative" :class="getGridColsClass(getFilteredDirectReports().length)">
+                                <template x-for="member in getFilteredDirectReports()" :key="member.id">
+                                    <div class="flex flex-col items-center">
+                                        <!-- Vertical connection line to parent -->
+                                        <div class="w-0.5 h-6 bg-gray-300 mb-2"></div>
+                                        
+                                        <!-- Direct Report Card -->
+                                        <div @click="selectTeamMember(member)" class="bg-white border-2 border-gray-200 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer hover:border-blue-300 max-w-xs w-full">
+                                            <div class="flex items-center mb-3">
+                                                <img :src="member.profilePicture" :alt="member.name" class="w-12 h-12 rounded-full object-cover mr-3">
+                                                <div class="flex-1 min-w-0">
+                                                    <h5 class="font-semibold text-gray-900 truncate" x-text="member.name"></h5>
+                                                    <p class="text-sm text-gray-600 truncate" x-text="member.designation"></p>
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1">
+                                                        Direct Report
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Skills Summary -->
+                                            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                                                <div class="bg-green-50 rounded p-1">
+                                                    <div class="font-bold text-green-600" x-text="member.strengthCount"></div>
+                                                    <div class="text-green-700">Strengths</div>
+                                                </div>
+                                                <div class="bg-blue-50 rounded p-1">
+                                                    <div class="font-bold text-blue-600" x-text="member.skilledCount"></div>
+                                                    <div class="text-blue-700">Skilled</div>
+                                                </div>
+                                                <div class="bg-orange-50 rounded p-1">
+                                                    <div class="font-bold text-orange-600" x-text="member.opportunityCount"></div>
+                                                    <div class="text-orange-700">Opportunities</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Team Size Indicator -->
+                                            <div class="mt-3 text-center" x-show="getTeamMembersUnder(member).length > 0">
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                    <i class="fas fa-users mr-1"></i>
+                                                    <span x-text="getTeamMembersUnder(member).length + ' team member' + (getTeamMembersUnder(member).length > 1 ? 's' : '')"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sub-team (Indirect Reports) -->
+                                        <div x-show="getTeamMembersUnder(member).length > 0" class="mt-6">
+                                            <!-- Connection line to sub-team -->
+                                            <div class="flex justify-center mb-4">
+                                                <div class="w-0.5 h-6 bg-gray-300"></div>
+                                            </div>
+                                            
+                                            <!-- Horizontal line for sub-team -->
+                                            <div class="relative">
+                                                <div class="absolute top-6 left-1/2 transform -translate-x-1/2 w-full h-0.5 bg-gray-300 z-0" 
+                                                     x-show="getTeamMembersUnder(member).length > 1"></div>
+                                                
+                                                <div class="grid gap-4 z-10 relative" :class="getGridColsClass(getTeamMembersUnder(member).length)">
+                                                    <template x-for="subMember in getTeamMembersUnder(member)" :key="subMember.id">
+                                                        <div class="flex flex-col items-center">
+                                                            <!-- Vertical connection line -->
+                                                            <div class="w-0.5 h-6 bg-gray-300 mb-2"></div>
+                                                            
+                                                            <!-- Sub-team Member Card -->
+                                                            <div @click="selectTeamMember(subMember)" class="bg-gray-50 border border-gray-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:border-gray-300 max-w-xs w-full">
+                                                                <div class="flex items-center mb-2">
+                                                                    <img :src="subMember.profilePicture" :alt="subMember.name" class="w-8 h-8 rounded-full object-cover mr-2">
+                                                                    <div class="flex-1 min-w-0">
+                                                                        <h6 class="font-medium text-gray-900 text-sm truncate" x-text="subMember.name"></h6>
+                                                                        <p class="text-xs text-gray-600 truncate" x-text="subMember.designation"></p>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="grid grid-cols-3 gap-1 text-center text-xs">
+                                                                    <div class="bg-green-100 rounded px-1 py-0.5">
+                                                                        <div class="font-bold text-green-600" x-text="subMember.strengthCount"></div>
+                                                                    </div>
+                                                                    <div class="bg-blue-100 rounded px-1 py-0.5">
+                                                                        <div class="font-bold text-blue-600" x-text="subMember.skilledCount"></div>
+                                                                    </div>
+                                                                    <div class="bg-orange-100 rounded px-1 py-0.5">
+                                                                        <div class="font-bold text-orange-600" x-text="subMember.opportunityCount"></div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="mt-2 text-center">
+                                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-700">
+                                                                        Indirect Report
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Tree Legend -->
+                        <div class="mt-8 bg-gray-50 rounded-lg p-4">
+                            <h5 class="font-medium text-gray-900 mb-3">Legend</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-blue-500 rounded mr-2"></div>
+                                    <span>Manager (You)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-white border-2 border-gray-300 rounded mr-2"></div>
+                                    <span>Direct Reports</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-gray-100 border border-gray-300 rounded mr-2"></div>
+                                    <span>Indirect Reports</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-4 h-0.5 bg-gray-300 mr-2"></div>
+                                    <span>Reporting Lines</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skill Management Tab -->
+                <div x-show="activeTab === 'skills'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                    
+                    <!-- Action Panel -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <button @click="showCreateDevelopmentPlan = true" class="bg-primary text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                                <i class="fas fa-road mr-2"></i>Create Development Plan
+                            </button>
+                            <button @click="showSkillAssignmentModal = true" class="bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center">
+                                <i class="fas fa-user-plus mr-2"></i>Assign Skills
+                            </button>
+                            <button @click="showSkillRatingModal = true" class="bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center">
+                                <i class="fas fa-star mr-2"></i>Rate Team Skills
+                            </button>
+                            <button @click="showProgressTracker = true" class="bg-orange-600 text-white px-4 py-3 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center">
+                                <i class="fas fa-chart-line mr-2"></i>Track Progress
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Skill Update Requests -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">Skill Update Requests</h3>
+                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium" x-text="skillUpdateRequests.length + ' Pending'"></span>
+                        </div>
+                        
+                        <div class="space-y-4" x-show="skillUpdateRequests.length > 0">
+                            <template x-for="request in skillUpdateRequests" :key="request.id">
+                                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div class="flex items-center">
+                                            <img :src="getTeamMemberById(request.employeeId)?.profilePicture" :alt="request.employeeName" class="w-10 h-10 rounded-full object-cover mr-3">
+                                            <div>
+                                                <h4 class="font-medium text-gray-900" x-text="request.employeeName"></h4>
+                                                <p class="text-sm text-gray-600" x-text="'Requesting update for: ' + request.skillName"></p>
+                                            </div>
+                                        </div>
+                                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium" x-text="request.status"></span>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="flex items-center space-x-4 text-sm">
+                                            <span>Current Level: <span class="font-medium text-blue-600" x-text="request.currentLevel"></span></span>
+                                            <i class="fas fa-arrow-right text-gray-400"></i>
+                                            <span>Requested Level: <span class="font-medium text-green-600" x-text="request.requestedLevel"></span></span>
+                                            <span class="ml-4 text-xs text-gray-500">Priority: <span :class="request.priority === 'High' ? 'text-red-600' : request.priority === 'Medium' ? 'text-orange-600' : 'text-gray-600'" x-text="request.priority"></span></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <p class="text-sm text-gray-700 mb-2"><strong>Justification:</strong></p>
+                                        <p class="text-sm text-gray-600 bg-gray-50 p-2 rounded" x-text="request.justification"></p>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-xs text-gray-500">
+                                            <span>Requested on: </span><span x-text="formatDate(request.requestDate)"></span>
+                                        </div>
+                                        <div class="space-x-2">
+                                            <button @click="openSkillReviewModal(request)" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                                <i class="fas fa-eye mr-1"></i>Review
+                                            </button>
+                                            <button @click="approveSkillRequest(request)" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                                <i class="fas fa-check mr-1"></i>Approve
+                                            </button>
+                                            <button @click="rejectSkillRequest(request)" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                                <i class="fas fa-times mr-1"></i>Reject
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <div x-show="skillUpdateRequests.length === 0" class="text-center py-8">
+                            <i class="fas fa-check-circle text-6xl text-green-300 mb-4"></i>
+                            <h4 class="text-lg font-medium text-gray-900 mb-2">All Caught Up!</h4>
+                            <p class="text-gray-600">No pending skill update requests at the moment.</p>
+                        </div>
+                    </div>
+
+                    <!-- Global Skill Repository -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">Global Skill Repository</h3>
+                            <div class="flex space-x-2">
+                                <button @click="showAddSkillModal = true" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                                    <i class="fas fa-plus mr-2"></i>Add New Skill
+                                </button>
+                                <button @click="toggleDragMode()" :class="dragModeActive ? 'bg-orange-600 hover:bg-orange-700' : 'bg-gray-600 hover:bg-gray-700'" class="text-white px-4 py-2 rounded-md transition-colors">
+                                    <i class="fas fa-hand-paper mr-2"></i><span x-text="dragModeActive ? 'Exit Drag Mode' : 'Enable Drag Mode'"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Drag and Drop Instructions -->
+                        <div x-show="dragModeActive" class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-info-circle text-orange-600 mr-2"></i>
+                                <div>
+                                    <h4 class="font-medium text-orange-800">Drag & Drop Mode Active</h4>
+                                    <p class="text-sm text-orange-700">Drag skills from below and drop them on team members in the sidebar to assign skills.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Search and Filter -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="md:col-span-2">
+                                <input type="text" x-model="skillSearchFilter" placeholder="Search skills by name or description..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            </div>
+                            <div>
+                                <select x-model="skillCategoryFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">All Categories</option>
+                                    <option value="Technical">Technical</option>
+                                    <option value="Behavioral">Behavioral</option>
+                                    <option value="Leadership">Leadership</option>
+                                    <option value="Domain">Domain</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Skills Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <template x-for="skill in filteredGlobalSkills" :key="skill.id">
+                                <div 
+                                    :draggable="dragModeActive"
+                                    @dragstart="handleDragStart($event, skill)"
+                                    @dragend="handleDragEnd($event)"
+                                    class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                                    :class="{
+                                        'ring-2 ring-blue-500 bg-blue-50': selectedSkillForAssign === skill.id,
+                                        'hover:ring-2 hover:ring-orange-300 transform hover:scale-105': dragModeActive,
+                                        'cursor-grab': dragModeActive,
+                                        'cursor-grabbing': isDragging && currentDragSkill?.id === skill.id
+                                    }">
+                                    
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex-1">
+                                            <div class="flex items-center">
+                                                <h4 class="font-medium text-gray-900" x-text="skill.name"></h4>
+                                                <i x-show="dragModeActive" class="fas fa-grip-vertical text-gray-400 ml-2"></i>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">ID: <span x-text="skill.id"></span></p>
+                                        </div>
+                                        <div class="flex flex-col items-end space-y-1">
+                                            <span :class="getSkillCategoryBadgeClass(skill.category)" class="px-2 py-1 rounded-full text-xs font-medium" x-text="skill.category"></span>
+                                            <span class="text-xs text-gray-500">Level 1-5</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-600 mb-3" x-text="skill.description"></p>
+                                    
+                                    <div class="flex justify-between items-center mb-3">
+                                        <div class="text-xs text-gray-500">
+                                            <span>Used by: </span><span class="font-medium" x-text="getSkillUsageCount(skill.id) + ' team members'"></span>
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            <span>Avg Level: </span><span class="font-medium" x-text="getSkillAverageLevel(skill.id)"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex space-x-2" x-show="!dragModeActive">
+                                        <button @click="openSkillAssignmentModal(skill)" class="flex-1 bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
+                                            <i class="fas fa-user-plus mr-1"></i>Assign
+                                        </button>
+                                        <button @click="openSkillRatingModal(skill)" class="flex-1 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                                            <i class="fas fa-star mr-1"></i>Rate
+                                        </button>
+                                    </div>
+                                    
+                                    <div x-show="dragModeActive" class="text-center py-2 bg-orange-100 rounded text-sm text-orange-700 font-medium">
+                                        <i class="fas fa-hand-point-up mr-1"></i>Drag to assign
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <!-- No Skills Found -->
+                        <div x-show="filteredGlobalSkills.length === 0" class="text-center py-12">
+                            <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+                            <h4 class="text-lg font-medium text-gray-900 mb-2">No Skills Found</h4>
+                            <p class="text-gray-600 mb-4">Try adjusting your search criteria or add a new skill.</p>
+                            <button @click="showAddSkillModal = true" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-plus mr-2"></i>Add New Skill
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Team Members Sidebar for Drag & Drop (shown when drag mode is active) -->
+                    <div x-show="dragModeActive" class="fixed right-4 top-1/2 transform -translate-y-1/2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 max-h-96 overflow-y-auto">
+                        <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-users mr-2"></i>Drop Skills on Team Members
+                        </h4>
+                        <div class="space-y-2">
+                            <template x-for="member in teamMembers" :key="member.id">
+                                <div 
+                                    @dragover.prevent
+                                    @drop="handleSkillDrop($event, member)"
+                                    class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                                    :class="{'bg-green-100 border-green-300': dropTargetMember?.id === member.id}">
+                                    <img :src="member.profilePicture" :alt="member.name" class="w-8 h-8 rounded-full object-cover mr-3">
+                                    <div class="flex-1">
+                                        <h5 class="font-medium text-sm text-gray-900" x-text="member.name"></h5>
+                                        <p class="text-xs text-gray-600" x-text="member.designation"></p>
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        <span x-text="member.skills?.length || 0"></span> skills
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Track Progress Modal -->
+                    <div x-show="showProgressTracker" @click.away="showProgressTracker = false" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-6xl shadow-lg rounded-md bg-white">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-2xl font-bold text-gray-900 flex items-center">
+                                    <i class="fas fa-chart-line mr-3 text-orange-600"></i>
+                                    Team Development Progress Tracker
+                                </h3>
+                                <button @click="showProgressTracker = false" class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-times text-xl"></i>
+                                </button>
+                            </div>
+
+                            <!-- Team Member Selection -->
+                            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                                <h4 class="font-semibold text-gray-900 mb-3">Select Team Member</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                                    <template x-for="member in teamMembers" :key="member.id">
+                                        <button 
+                                            @click="selectedProgressMember = member.id"
+                                            :class="selectedProgressMember === member.id ? 'bg-blue-100 border-blue-500 text-blue-900' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'"
+                                            class="flex items-center p-3 border-2 rounded-lg transition-all duration-200">
+                                            <img :src="member.profilePicture" :alt="member.name" class="w-8 h-8 rounded-full object-cover mr-2">
+                                            <div class="text-left">
+                                                <div class="font-medium text-sm" x-text="member.name"></div>
+                                                <div class="text-xs opacity-75" x-text="getActiveDevelopmentPlansCount(member.id) + ' active plans'"></div>
+                                            </div>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Progress Overview (shown when a member is selected) -->
+                            <div x-show="selectedProgressMember" class="space-y-6">
+                                <!-- Member Progress Summary -->
+                                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="text-lg font-semibold text-gray-900">Development Progress Overview</h4>
+                                        <div class="flex items-center space-x-4 text-sm">
+                                            <span class="text-gray-600">Overall Progress:</span>
+                                            <div class="flex items-center">
+                                                <div class="w-32 bg-gray-200 rounded-full h-2 mr-2">
+                                                    <div :style="'width: ' + getOverallProgress(selectedProgressMember) + '%'" class="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-500"></div>
+                                                </div>
+                                                <span class="font-medium text-gray-900" x-text="getOverallProgress(selectedProgressMember) + '%'"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quick Stats -->
+                                    <div class="grid grid-cols-4 gap-4 mb-6">
+                                        <div class="bg-blue-50 rounded-lg p-4 text-center">
+                                            <div class="text-2xl font-bold text-blue-600" x-text="getMemberProgressStats(selectedProgressMember).totalSkills"></div>
+                                            <div class="text-sm text-blue-700">Total Skills</div>
+                                        </div>
+                                        <div class="bg-green-50 rounded-lg p-4 text-center">
+                                            <div class="text-2xl font-bold text-green-600" x-text="getMemberProgressStats(selectedProgressMember).completedSkills"></div>
+                                            <div class="text-sm text-green-700">Completed</div>
+                                        </div>
+                                        <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                                            <div class="text-2xl font-bold text-yellow-600" x-text="getMemberProgressStats(selectedProgressMember).inProgressSkills"></div>
+                                            <div class="text-sm text-yellow-700">In Progress</div>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-lg p-4 text-center">
+                                            <div class="text-2xl font-bold text-gray-600" x-text="getMemberProgressStats(selectedProgressMember).notStartedSkills"></div>
+                                            <div class="text-sm text-gray-700">Not Started</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Development Plan Tree View -->
+                                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                                    <h4 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                                        <i class="fas fa-sitemap mr-2 text-purple-600"></i>
+                                        Development Plan Tree View
+                                    </h4>
+
+                                    <!-- Development Plans Tree -->
+                                    <div class="space-y-6">
+                                        <template x-for="plan in getMemberDevelopmentPlans(selectedProgressMember)" :key="plan.id">
+                                            <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                                <!-- Plan Header -->
+                                                <div @click="togglePlanExpansion(plan.id)" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 cursor-pointer hover:from-purple-600 hover:to-blue-600 transition-all duration-200">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center">
+                                                            <i :class="isPlanExpanded(plan.id) ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="mr-3 transition-transform duration-200"></i>
+                                                            <div>
+                                                                <h5 class="font-semibold text-lg" x-text="plan.name"></h5>
+                                                                <p class="text-purple-100 text-sm" x-text="formatDate(plan.startDate) + ' - ' + formatDate(plan.endDate)"></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex items-center space-x-4">
+                                                            <div class="text-right">
+                                                                <div class="text-sm font-medium" x-text="getPlanProgress(plan) + '% Complete'"></div>
+                                                                <div :class="plan.status === 'Active' ? 'text-green-200' : 'text-yellow-200'" class="text-xs" x-text="plan.status"></div>
+                                                            </div>
+                                                            <div class="w-16 bg-purple-300 rounded-full h-2">
+                                                                <div :style="'width: ' + getPlanProgress(plan) + '%'" class="bg-white h-2 rounded-full transition-all duration-500"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Plan Content (Skills Tree) -->
+                                                <div x-show="isPlanExpanded(plan.id)" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 max-h-0" x-transition:enter-end="opacity-100 max-h-screen" class="bg-white">
+                                                    
+                                                    <!-- Skills in Development Plan -->
+                                                    <div class="p-6">
+                                                        <h6 class="font-medium text-gray-900 mb-4 flex items-center">
+                                                            <i class="fas fa-cogs mr-2 text-blue-500"></i>
+                                                            Skills Development
+                                                        </h6>
+                                                        
+                                                        <div class="space-y-4">
+                                                            <template x-for="skill in plan.skills" :key="skill.id">
+                                                                <div class="relative pl-8 border-l-2 border-gray-200">
+                                                                    <!-- Progress Node -->
+                                                                    <div :class="getSkillProgressNodeClass(skill.progress)" class="absolute -left-2 top-3 w-4 h-4 rounded-full border-2 border-white"></div>
+                                                                    
+                                                                    <!-- Skill Card -->
+                                                                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                                                                        <div class="flex items-center justify-between mb-3">
+                                                                            <div>
+                                                                                <h7 class="font-medium text-gray-900" x-text="skill.name"></h7>
+                                                                                <p class="text-sm text-gray-600" x-text="'Assigned by: ' + skill.assignedBy"></p>
+                                                                            </div>
+                                                                            <span :class="getProgressBadgeClass(skill.progress)" class="px-3 py-1 rounded-full text-xs font-medium" x-text="skill.progress"></span>
+                                                                        </div>
+                                                                        
+                                                                        <!-- Skill Level Progress -->
+                                                                        <div class="mb-3">
+                                                                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                                                                <span>Progress: Level <span x-text="skill.currentLevel"></span> → <span x-text="skill.targetLevel"></span></span>
+                                                                                <span x-text="Math.round((skill.currentLevel / skill.targetLevel) * 100) + '%'"></span>
+                                                                            </div>
+                                                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                                                <div :style="'width: ' + Math.round((skill.currentLevel / skill.targetLevel) * 100) + '%'" :class="getSkillProgressBarClass(skill.progress)" class="h-2 rounded-full transition-all duration-500"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                        <!-- Timeline -->
+                                                                        <div class="flex justify-between items-center text-xs text-gray-500 mb-3">
+                                                                            <span>Start: <span x-text="formatDate(skill.startDate)"></span></span>
+                                                                            <span>Target: <span x-text="formatDate(skill.endDate)"></span></span>
+                                                                        </div>
+                                                                        
+                                                                        <!-- Actions and Resources -->
+                                                                        <div class="flex items-center justify-between">
+                                                                            <div class="flex space-x-2">
+                                                                                <button @click="updateSkillProgress(skill)" class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700">
+                                                                                    <i class="fas fa-edit mr-1"></i>Update Progress
+                                                                                </button>
+                                                                                <button x-show="skill.courseLink" @click="window.open(skill.courseLink)" class="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700">
+                                                                                    <i class="fas fa-external-link-alt mr-1"></i>Course
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="text-xs text-gray-500">
+                                                                                Last updated: <span x-text="skill.lastUpdated || 'Never'"></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Activities for this skill -->
+                                                                        <div x-show="getSkillActivities(plan.id, skill.id).length > 0" class="mt-4 border-t border-gray-200 pt-3">
+                                                                            <h8 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                                                                <i class="fas fa-tasks mr-2"></i>Activities
+                                                                            </h8>
+                                                                            <div class="space-y-2">
+                                                                                <template x-for="activity in getSkillActivities(plan.id, skill.id)" :key="activity.id">
+                                                                                    <div class="flex items-center justify-between text-sm">
+                                                                                        <div class="flex items-center">
+                                                                                            <i :class="activity.status === 'Completed' ? 'fas fa-check-circle text-green-500' : activity.status === 'In Progress' ? 'fas fa-clock text-yellow-500' : 'fas fa-circle text-gray-400'" class="mr-2"></i>
+                                                                                            <span x-text="activity.name"></span>
+                                                                                        </div>
+                                                                                        <span class="text-xs text-gray-500" x-text="formatDate(activity.scheduledDate)"></span>
+                                                                                    </div>
+                                                                                </template>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <!-- No Development Plans Message -->
+                                    <div x-show="getMemberDevelopmentPlans(selectedProgressMember).length === 0" class="text-center py-12">
+                                        <i class="fas fa-clipboard-list text-6xl text-gray-300 mb-4"></i>
+                                        <h4 class="text-lg font-medium text-gray-900 mb-2">No Active Development Plans</h4>
+                                        <p class="text-gray-600 mb-4">This team member doesn't have any active development plans yet.</p>
+                                        <button @click="createDevelopmentPlanForMember(selectedProgressMember)" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                            <i class="fas fa-plus mr-2"></i>Create Development Plan
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions Footer -->
+                            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
+                                <div class="flex space-x-2">
+                                    <button @click="exportProgressReport(selectedProgressMember)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                                        <i class="fas fa-download mr-2"></i>Export Report
+                                    </button>
+                                    <button @click="scheduleProgressReview(selectedProgressMember)" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
+                                        <i class="fas fa-calendar mr-2"></i>Schedule Review
+                                    </button>
+                                </div>
+                                <button @click="showProgressTracker = false" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HR Dashboard Placeholder -->
+        <div x-show="userType === 'hr'">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="text-center py-20">
+                    <i class="fas fa-cog text-6xl text-purple-300 mb-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">HR/Admin Dashboard</h2>
+                    <p class="text-gray-600">This would contain HR administration features, reports, and global system management.</p>
+                    <button @click="userType = null" class="mt-4 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
+                        Back to User Selection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function skillManagementApp() {
+            return {
+                userType: null,
+                
+                selectUserType(type) {
+                    this.userType = type;
+                },
+                
+                logout() {
+                    this.userType = null;
+                },
+                
+                getCurrentUser() {
+                    if (this.userType === 'employee') {
+                        return { name: 'John Doe' };
+                    } else if (this.userType === 'manager') {
+                        return { name: 'Sarah Johnson' };
+                    } else if (this.userType === 'hr') {
+                        return { name: 'HR Admin' };
+                    }
+                    return { name: 'User' };
+                }
+            }
+        }
+
+        function employeeDashboard() {
+            return {
+                activeTab: 'profile',
+                skillFilter: '',
+                statusFilter: '',
+                devSkillFilter: '',
+                devStatusFilter: '',
+                devProgressFilter: '',
+                employee: {},
+                jobRole: {},
+                skills: [],
+                developmentPlan: {},
+
+                async init() {
+                    // Initialize with fallback data first to ensure something displays
+                    this.initFallbackData();
+                    
+                    // Then try to load data from JSON files to override fallback
+                    try {
+                        const employeeResponse = await fetch('./data/employee-data.json');
+                        const employeeData = await employeeResponse.json();
+                        this.employee = employeeData.employee;
+                        this.jobRole = employeeData.jobRole;
+
+                        const skillsResponse = await fetch('./data/skills-data.json');
+                        const skillsData = await skillsResponse.json();
+                        this.skills = skillsData.skills;
+
+                        const devPlanResponse = await fetch('./data/development-plan.json');
+                        const devPlanData = await devPlanResponse.json();
+                        this.developmentPlan = devPlanData.developmentPlan;
+                        
+                        console.log('Data loaded successfully from JSON files');
+                    } catch (error) {
+                        console.log('Using fallback data due to:', error.message);
+                    }
+                },
+
+                initFallbackData() {
+                    this.employee = {
+                        name: "John Doe",
+                        email: "john.doe@company.com",
+                        phone: "+1-555-0123",
+                        designation: "Software Engineer - L2",
+                        department: "Engineering",
+                        location: "San Francisco, CA",
+                        profilePicture: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                        education: [{
+                            degree: "Bachelor of Science in Computer Science",
+                            institution: "University of California, Berkeley",
+                            year: "2019"
+                        }],
+                        experience: [{
+                            company: "TechCorp",
+                            position: "Software Engineer",
+                            duration: "2019 - Present",
+                            description: "Full-stack development using Python, JavaScript, and cloud technologies"
+                        }],
+                        certifications: [{
+                            name: "AWS Certified Developer",
+                            issuer: "Amazon Web Services",
+                            date: "2023",
+                            verificationLink: "https://aws.amazon.com/verification"
+                        }]
+                    };
+
+                    this.jobRole = {
+                        id: "JR_SE_L2_001",
+                        name: "Software Engineer - L2",
+                        description: "Responsible for designing, developing, and maintaining software applications with focus on quality and performance.",
+                        deliveryCouncil: "Engineering Excellence",
+                        subDeliveryCouncil: "Backend Development",
+                        level: "L2",
+                        location: "San Francisco, CA",
+                        employmentType: "Full-time",
+                        mandatorySkills: ["python_advanced", "oop_advanced", "rest_apis_advanced", "debugging_proficient", "git_proficient"],
+                        desiredSkills: ["microservices_basic", "design_patterns_basic", "cloud_advanced"],
+                        keyResponsibilities: [
+                            "Design and develop scalable software solutions",
+                            "Write clean, maintainable, and well-tested code",
+                            "Collaborate with cross-functional teams",
+                            "Participate in code reviews and technical discussions",
+                            "Mentor junior developers"
+                        ],
+                        kpis: [
+                            "Code Quality (Defect Rate < 2%)",
+                            "Code Coverage (> 80%)",
+                            "Sprint Velocity",
+                            "Ticket Resolution Time"
+                        ]
+                    };
+
+                    this.skills = [
+                        {
+                            id: "python_advanced",
+                            name: "Python Programming",
+                            category: "Technical",
+                            description: "Advanced Python programming including frameworks and libraries",
+                            currentLevel: 4,
+                            targetLevel: 5,
+                            lastRatedDate: "2024-07-15",
+                            ratedBy: "MGR001",
+                            comments: "Strong Python skills, ready for advanced projects",
+                            status: "Strength"
+                        },
+                        {
+                            id: "oop_advanced",
+                            name: "Object-Oriented Programming",
+                            category: "Technical",
+                            description: "Advanced OOP concepts and design principles",
+                            currentLevel: 4,
+                            targetLevel: 4,
+                            lastRatedDate: "2024-07-15",
+                            ratedBy: "MGR001",
+                            comments: "Excellent understanding of OOP principles",
+                            status: "Strength"
+                        },
+                        {
+                            id: "rest_apis_advanced",
+                            name: "REST APIs",
+                            category: "Technical",
+                            description: "Design and implementation of RESTful web services",
+                            currentLevel: 4,
+                            targetLevel: 4,
+                            lastRatedDate: "2024-07-10",
+                            ratedBy: "MGR001",
+                            comments: "Strong API design skills",
+                            status: "Strength"
+                        },
+                        {
+                            id: "debugging_proficient",
+                            name: "Debugging",
+                            category: "Technical",
+                            description: "Systematic debugging and troubleshooting skills",
+                            currentLevel: 3,
+                            targetLevel: 4,
+                            lastRatedDate: "2024-06-20",
+                            ratedBy: "MGR001",
+                            comments: "Good debugging skills, can work independently",
+                            status: "Skilled"
+                        },
+                        {
+                            id: "git_proficient",
+                            name: "Git Version Control",
+                            category: "Technical",
+                            description: "Version control using Git and collaboration workflows",
+                            currentLevel: 3,
+                            targetLevel: 3,
+                            lastRatedDate: "2024-06-15",
+                            ratedBy: "MGR001",
+                            comments: "Comfortable with Git workflows",
+                            status: "Skilled"
+                        },
+                        {
+                            id: "microservices_basic",
+                            name: "Microservices Architecture",
+                            category: "Technical",
+                            description: "Understanding and implementation of microservices patterns",
+                            currentLevel: 2,
+                            targetLevel: 3,
+                            lastRatedDate: "2024-05-30",
+                            ratedBy: "MGR001",
+                            comments: "Needs more hands-on experience with microservices",
+                            status: "Opportunity"
+                        },
+                        {
+                            id: "design_patterns_basic",
+                            name: "Design Patterns",
+                            category: "Technical",
+                            description: "Common software design patterns and their applications",
+                            currentLevel: 2,
+                            targetLevel: 3,
+                            lastRatedDate: "2024-05-25",
+                            ratedBy: "MGR001",
+                            comments: "Basic understanding, needs practical application",
+                            status: "Opportunity"
+                        },
+                        {
+                            id: "cloud_advanced",
+                            name: "Cloud Technologies",
+                            category: "Technical",
+                            description: "Cloud platforms, services, and deployment strategies",
+                            currentLevel: 3,
+                            targetLevel: 4,
+                            lastRatedDate: "2024-07-01",
+                            ratedBy: "MGR001",
+                            comments: "Good cloud knowledge, expanding to advanced concepts",
+                            status: "Skilled"
+                        }
+                    ];
+
+                    this.developmentPlan = {
+                        id: "DP_001",
+                        employeeId: "EMP001",
+                        startDate: "2024-08-01",
+                        endDate: "2024-12-31",
+                        status: "Active",
+                        progress: "In Progress",
+                        summary: {
+                            totalSkills: 3,
+                            completedSkills: 0,
+                            inProgressSkills: 2,
+                            notStartedSkills: 1
+                        },
+                        skills: [
+                            {
+                                skillId: "microservices_basic",
+                                skillName: "Microservices Architecture",
+                                currentLevel: 2,
+                                targetLevel: 3,
+                                startDate: "2024-08-01",
+                                endDate: "2024-10-31",
+                                status: "Active",
+                                progress: "In Progress",
+                                assignedBy: "MGR001",
+                                courseLink: "https://athena.company.com/microservices-101"
+                            }
+                        ],
+                        activities: [
+                            {
+                                id: "ACT_001",
+                                name: "Microservices Workshop",
+                                description: "Hands-on workshop on building microservices with Docker and Kubernetes",
+                                scheduledDate: "2024-09-15",
+                                status: "In Progress",
+                                assignedBy: "MGR001"
+                            }
+                        ]
+                    };
+                },
+
+                get filteredSkills() {
+                    return this.skills.filter(skill => {
+                        const matchesFilter = !this.skillFilter || 
+                            skill.name.toLowerCase().includes(this.skillFilter.toLowerCase()) ||
+                            skill.description.toLowerCase().includes(this.skillFilter.toLowerCase());
+                        const matchesStatus = !this.statusFilter || skill.status === this.statusFilter;
+                        return matchesFilter && matchesStatus;
+                    });
+                },
+
+                get filteredDevSkills() {
+                    return this.developmentPlan.skills?.filter(skill => {
+                        const matchesFilter = !this.devSkillFilter || 
+                            skill.skillName.toLowerCase().includes(this.devSkillFilter.toLowerCase());
+                        const matchesStatus = !this.devStatusFilter || skill.status === this.devStatusFilter;
+                        const matchesProgress = !this.devProgressFilter || skill.progress === this.devProgressFilter;
+                        return matchesFilter && matchesStatus && matchesProgress;
+                    }) || [];
+                },
+
+                getSkillsByStatus(status) {
+                    return this.skills.filter(skill => skill.status === status);
+                },
+
+                getStatusBadgeClass(status) {
+                    const classes = {
+                        'Strength': 'bg-green-100 text-green-800',
+                        'Skilled': 'bg-blue-100 text-blue-800',
+                        'Opportunity': 'bg-orange-100 text-orange-800'
+                    };
+                    return classes[status] || 'bg-gray-100 text-gray-800';
+                },
+
+                getProgressBarClass(level) {
+                    if (level >= 4) return 'bg-green-500';
+                    if (level >= 3) return 'bg-blue-500';
+                    return 'bg-orange-500';
+                },
+
+                getProgressBadgeClass(progress) {
+                    const classes = {
+                        'Completed': 'bg-green-100 text-green-800',
+                        'In Progress': 'bg-yellow-100 text-yellow-800',
+                        'Not Started': 'bg-gray-100 text-gray-800'
+                    };
+                    return classes[progress] || 'bg-gray-100 text-gray-800';
+                },
+
+                formatDate(dateString) {
+                    return new Date(dateString).toLocaleDateString();
+                }
+            }
+        }
+
+        function managerDashboard() {
+            return {
+                activeTab: 'team',
+                teamViewMode: 'grid', // 'grid' or 'tree'
+                skillStatusFilter: '',
+                memberSearchFilter: '',
+                skillSearchFilter: '',
+                skillCategoryFilter: '',
+                selectedSkillForAssign: null,
+                showAddSkillModal: false,
+                showCreateDevelopmentPlan: false,
+                showSkillAssignmentModal: false,
+                showSkillRatingModal: false,
+                showProgressTracker: false,
+                dragModeActive: false,
+                isDragging: false,
+                currentDragSkill: null,
+                dropTargetMember: null,
+                teamMembers: [],
+                skillUpdateRequests: [],
+                globalSkills: [],
+                
+                async init() {
+                    await this.loadManagerData();
+                },
+                
+                async loadManagerData() {
+                    try {
+                        const response = await fetch('./data/manager-data.json');
+                        const data = await response.json();
+                        this.teamMembers = data.teamMembers;
+                        this.skillUpdateRequests = data.skillUpdateRequests;
+                        this.globalSkills = data.globalSkills;
+                    } catch (error) {
+                        console.error('Error loading manager data:', error);
+                        this.initFallbackData();
+                    }
+                },
+                
+                initFallbackData() {
+                    // Fallback data for demo with hierarchical structure
+                    this.teamMembers = [
+                        // Direct Reports
+                        {
+                            id: "EMP001",
+                            name: "John Doe",
+                            designation: "Senior Software Engineer",
+                            profilePicture: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                            isDirect: true,
+                            reportsTo: "MGR001",
+                            opportunityCount: 2,
+                            strengthCount: 4,
+                            skilledCount: 3,
+                            developmentPlans: [
+                                {
+                                    id: 1,
+                                    name: 'Technical Leadership Development',
+                                    startDate: '2024-01-15',
+                                    endDate: '2024-07-15',
+                                    status: 'Active',
+                                    skills: [
+                                        {
+                                            id: 1,
+                                            name: 'System Architecture',
+                                            currentLevel: 3,
+                                            targetLevel: 5,
+                                            progress: 'In Progress',
+                                            startDate: '2024-01-15',
+                                            endDate: '2024-04-15',
+                                            assignedBy: 'Manager',
+                                            courseLink: 'https://example.com/architecture',
+                                            lastUpdated: '2024-02-10'
+                                        },
+                                        {
+                                            id: 2,
+                                            name: 'Team Management',
+                                            currentLevel: 2,
+                                            targetLevel: 4,
+                                            progress: 'Not Started',
+                                            startDate: '2024-04-01',
+                                            endDate: '2024-07-01',
+                                            assignedBy: 'Manager'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: "EMP002",
+                            name: "Alice Johnson",
+                            designation: "Software Engineer Lead",
+                            profilePicture: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                            isDirect: true,
+                            reportsTo: "MGR001",
+                            opportunityCount: 1,
+                            strengthCount: 5,
+                            skilledCount: 2,
+                            developmentPlans: [
+                                {
+                                    id: 2,
+                                    name: 'Advanced Frontend Leadership',
+                                    startDate: '2024-02-01',
+                                    endDate: '2024-08-01',
+                                    status: 'Active',
+                                    skills: [
+                                        {
+                                            id: 1,
+                                            name: 'React Advanced Patterns',
+                                            currentLevel: 4,
+                                            targetLevel: 5,
+                                            progress: 'Completed',
+                                            startDate: '2024-02-01',
+                                            endDate: '2024-04-01',
+                                            assignedBy: 'Manager',
+                                            courseLink: 'https://example.com/react-advanced',
+                                            lastUpdated: '2024-03-15'
+                                        },
+                                        {
+                                            id: 2,
+                                            name: 'Mentoring Skills',
+                                            currentLevel: 3,
+                                            targetLevel: 4,
+                                            progress: 'In Progress',
+                                            startDate: '2024-03-01',
+                                            endDate: '2024-06-01',
+                                            assignedBy: 'Manager'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: "EMP003",
+                            name: "Michael Chen",
+                            designation: "DevOps Engineer",
+                            profilePicture: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                            isDirect: true,
+                            reportsTo: "MGR001",
+                            opportunityCount: 3,
+                            strengthCount: 3,
+                            skilledCount: 2,
+                            developmentPlans: [
+                                {
+                                    id: 3,
+                                    name: 'Cloud Infrastructure Mastery',
+                                    startDate: '2024-01-01',
+                                    endDate: '2024-09-01',
+                                    status: 'Active',
+                                    skills: [
+                                        {
+                                            id: 1,
+                                            name: 'Kubernetes',
+                                            currentLevel: 2,
+                                            targetLevel: 4,
+                                            progress: 'In Progress',
+                                            startDate: '2024-01-01',
+                                            endDate: '2024-05-01',
+                                            assignedBy: 'Manager',
+                                            courseLink: 'https://example.com/kubernetes'
+                                        },
+                                        {
+                                            id: 2,
+                                            name: 'AWS Solutions Architecture',
+                                            currentLevel: 3,
+                                            targetLevel: 5,
+                                            progress: 'Not Started',
+                                            startDate: '2024-05-01',
+                                            endDate: '2024-09-01',
+                                            assignedBy: 'Manager'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        // Indirect Reports (reporting to John Doe)
+                        {
+                            id: "EMP004",
+                            name: "Sarah Wilson",
+                            designation: "Junior Software Engineer",
+                            profilePicture: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+                            isDirect: false,
+                            reportsTo: "EMP001",
+                            opportunityCount: 4,
+                            strengthCount: 2,
+                            skilledCount: 2,
+                            developmentPlans: [
+                                {
+                                    id: 4,
+                                    name: 'Junior to Mid-Level Transition',
+                                    startDate: '2024-01-01',
+                                    endDate: '2024-08-01',
+                                    status: 'Active',
+                                    skills: [
+                                        {
+                                            id: 1,
+                                            name: 'Python Programming',
+                                            currentLevel: 2,
+                                            targetLevel: 4,
+                                            progress: 'In Progress',
+                                            startDate: '2024-01-01',
+                                            endDate: '2024-05-01',
+                                            assignedBy: 'John Doe',
+                                            courseLink: 'https://example.com/python'
+                                        },
+                                        {
+                                            id: 2,
+                                            name: 'Code Review Skills',
+                                            currentLevel: 1,
+                                            targetLevel: 3,
+                                            progress: 'Not Started',
+                                            startDate: '2024-05-01',
+                                            endDate: '2024-08-01',
+                                            assignedBy: 'John Doe'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: "EMP005",
+                            name: "David Brown",
+                            designation: "Software Engineer I",
+                            profilePicture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+                            isDirect: false,
+                            reportsTo: "EMP001",
+                            opportunityCount: 3,
+                            strengthCount: 3,
+                            skilledCount: 2,
+                            developmentPlans: []
+                        },
+                        // Indirect Reports (reporting to Alice Johnson)
+                        {
+                            id: "EMP006",
+                            name: "Emily Davis",
+                            designation: "Frontend Developer",
+                            profilePicture: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+                            isDirect: false,
+                            reportsTo: "EMP002",
+                            opportunityCount: 2,
+                            strengthCount: 4,
+                            skilledCount: 3,
+                            developmentPlans: [
+                                {
+                                    id: 5,
+                                    name: 'Frontend Specialization',
+                                    startDate: '2024-02-15',
+                                    endDate: '2024-08-15',
+                                    status: 'Active',
+                                    skills: [
+                                        {
+                                            id: 1,
+                                            name: 'React Testing',
+                                            currentLevel: 2,
+                                            targetLevel: 4,
+                                            progress: 'Completed',
+                                            startDate: '2024-02-15',
+                                            endDate: '2024-04-15',
+                                            assignedBy: 'Alice Johnson',
+                                            lastUpdated: '2024-04-10'
+                                        },
+                                        {
+                                            id: 2,
+                                            name: 'UI/UX Design Principles',
+                                            currentLevel: 1,
+                                            targetLevel: 3,
+                                            progress: 'In Progress',
+                                            startDate: '2024-04-01',
+                                            endDate: '2024-07-01',
+                                            assignedBy: 'Alice Johnson'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: "EMP007",
+                            name: "James Rodriguez",
+                            designation: "Backend Developer",
+                            profilePicture: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face",
+                            isDirect: false,
+                            reportsTo: "EMP002",
+                            opportunityCount: 1,
+                            strengthCount: 5,
+                            skilledCount: 2,
+                            developmentPlans: []
+                        },
+                        // Indirect Reports (reporting to Michael Chen)
+                        {
+                            id: "EMP008",
+                            name: "Lisa Anderson",
+                            designation: "Cloud Engineer",
+                            profilePicture: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
+                            isDirect: false,
+                            reportsTo: "EMP003",
+                            opportunityCount: 2,
+                            strengthCount: 4,
+                            skilledCount: 3,
+                            developmentPlans: [
+                                {
+                                    id: 6,
+                                    name: 'Cloud Security Certification',
+                                    startDate: '2024-03-01',
+                                    endDate: '2024-09-01',
+                                    status: 'Active',
+                                    skills: [
+                                        {
+                                            id: 1,
+                                            name: 'AWS Security',
+                                            currentLevel: 2,
+                                            targetLevel: 4,
+                                            progress: 'In Progress',
+                                            startDate: '2024-03-01',
+                                            endDate: '2024-06-01',
+                                            assignedBy: 'Michael Chen',
+                                            courseLink: 'https://example.com/aws-security'
+                                        },
+                                        {
+                                            id: 2,
+                                            name: 'Security Compliance',
+                                            currentLevel: 1,
+                                            targetLevel: 3,
+                                            progress: 'Not Started',
+                                            startDate: '2024-06-01',
+                                            endDate: '2024-09-01',
+                                            assignedBy: 'Michael Chen'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ];
+                    
+                    // Sample skill update requests
+                    this.skillUpdateRequests = [
+                        {
+                            id: "REQ001",
+                            employeeId: "EMP004",
+                            employeeName: "Sarah Wilson",
+                            skillName: "Python Programming",
+                            skillId: "python_advanced",
+                            currentLevel: 2,
+                            requestedLevel: 3,
+                            priority: "High",
+                            status: "Pending",
+                            justification: "I have been working on several Python projects and have gained significant experience. I've completed advanced Python courses and successfully implemented complex algorithms.",
+                            requestDate: "2024-08-20"
+                        },
+                        {
+                            id: "REQ002",
+                            employeeId: "EMP005",
+                            employeeName: "David Brown",
+                            skillName: "React Development",
+                            skillId: "react_advanced",
+                            currentLevel: 1,
+                            requestedLevel: 2,
+                            priority: "Medium",
+                            status: "Pending",
+                            justification: "I have been developing frontend applications using React for the past 6 months and feel confident in building component-based applications.",
+                            requestDate: "2024-08-18"
+                        }
+                    ];
+                    
+                    // Sample global skills repository
+                    this.globalSkills = [
+                        {
+                            id: "python_advanced",
+                            name: "Python Programming",
+                            category: "Technical",
+                            description: "Advanced Python programming including frameworks, libraries, and best practices"
+                        },
+                        {
+                            id: "react_advanced",
+                            name: "React Development",
+                            category: "Technical",
+                            description: "Building modern web applications using React framework and ecosystem"
+                        },
+                        {
+                            id: "nodejs_intermediate",
+                            name: "Node.js Development",
+                            category: "Technical",
+                            description: "Server-side JavaScript development using Node.js and Express"
+                        },
+                        {
+                            id: "aws_cloud",
+                            name: "AWS Cloud Services",
+                            category: "Technical",
+                            description: "Amazon Web Services cloud platform and infrastructure management"
+                        },
+                        {
+                            id: "docker_containerization",
+                            name: "Docker & Containerization",
+                            category: "Technical",
+                            description: "Container technology and application deployment using Docker"
+                        },
+                        {
+                            id: "leadership_skills",
+                            name: "Leadership & Team Management",
+                            category: "Leadership",
+                            description: "Leading teams, making decisions, and managing people effectively"
+                        },
+                        {
+                            id: "communication_skills",
+                            name: "Communication Skills",
+                            category: "Behavioral",
+                            description: "Effective written and verbal communication in professional settings"
+                        },
+                        {
+                            id: "problem_solving",
+                            name: "Problem Solving",
+                            category: "Behavioral",
+                            description: "Analytical thinking and systematic approach to solving complex problems"
+                        },
+                        {
+                            id: "agile_methodology",
+                            name: "Agile & Scrum",
+                            category: "Domain",
+                            description: "Agile development methodologies and Scrum framework implementation"
+                        },
+                        {
+                            id: "data_analysis",
+                            name: "Data Analysis",
+                            category: "Technical",
+                            description: "Analyzing and interpreting data using statistical methods and tools"
+                        }
+                    ];
+                },
+                
+                // Tree view helper methods
+                getFilteredDirectReports() {
+                    return this.teamMembers.filter(member => {
+                        const isDirectReport = member.isDirect === true;
+                        const matchesSearch = !this.memberSearchFilter || 
+                            member.name.toLowerCase().includes(this.memberSearchFilter.toLowerCase()) ||
+                            member.designation.toLowerCase().includes(this.memberSearchFilter.toLowerCase());
+                        
+                        let matchesStatus = true;
+                        if (this.skillStatusFilter === 'high-opportunity') {
+                            matchesStatus = member.opportunityCount >= 3;
+                        } else if (this.skillStatusFilter === 'medium-opportunity') {
+                            matchesStatus = member.opportunityCount >= 1 && member.opportunityCount <= 2;
+                        } else if (this.skillStatusFilter === 'high-strength') {
+                            matchesStatus = member.strengthCount >= 3;
+                        }
+                        
+                        return isDirectReport && matchesSearch && matchesStatus;
+                    });
+                },
+                
+                getTeamMembersUnder(manager) {
+                    return this.teamMembers.filter(member => {
+                        const reportsToManager = member.reportsTo === manager.id;
+                        const matchesSearch = !this.memberSearchFilter || 
+                            member.name.toLowerCase().includes(this.memberSearchFilter.toLowerCase()) ||
+                            member.designation.toLowerCase().includes(this.memberSearchFilter.toLowerCase());
+                        
+                        let matchesStatus = true;
+                        if (this.skillStatusFilter === 'high-opportunity') {
+                            matchesStatus = member.opportunityCount >= 3;
+                        } else if (this.skillStatusFilter === 'medium-opportunity') {
+                            matchesStatus = member.opportunityCount >= 1 && member.opportunityCount <= 2;
+                        } else if (this.skillStatusFilter === 'high-strength') {
+                            matchesStatus = member.strengthCount >= 3;
+                        }
+                        
+                        return reportsToManager && matchesSearch && matchesStatus;
+                    });
+                },
+                
+                getManagerStats() {
+                    const directReports = this.teamMembers.filter(member => member.isDirect === true);
+                    const totalTeamSize = this.teamMembers.length;
+                    const avgPerformance = Math.round(
+                        this.teamMembers.reduce((sum, member) => {
+                            return sum + ((member.strengthCount * 2 + member.skilledCount) / (member.strengthCount + member.skilledCount + member.opportunityCount)) * 100;
+                        }, 0) / this.teamMembers.length
+                    );
+                    
+                    return {
+                        totalDirectReports: directReports.length,
+                        totalTeamSize: totalTeamSize,
+                        avgPerformance: avgPerformance || 75
+                    };
+                },
+                
+                getGridColsClass(count) {
+                    if (count === 1) return 'grid-cols-1';
+                    if (count === 2) return 'grid-cols-1 md:grid-cols-2';
+                    if (count === 3) return 'grid-cols-1 md:grid-cols-3';
+                    if (count === 4) return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4';
+                    return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
+                },
+
+                get filteredTeamMembers() {
+                    return this.teamMembers.filter(member => {
+                        const matchesSearch = !this.memberSearchFilter || 
+                            member.name.toLowerCase().includes(this.memberSearchFilter.toLowerCase());
+                        
+                        let matchesStatus = true;
+                        if (this.skillStatusFilter === 'high-opportunity') {
+                            matchesStatus = member.opportunityCount >= 3;
+                        } else if (this.skillStatusFilter === 'medium-opportunity') {
+                            matchesStatus = member.opportunityCount >= 1 && member.opportunityCount <= 2;
+                        } else if (this.skillStatusFilter === 'high-strength') {
+                            matchesStatus = member.strengthCount >= 3;
+                        }
+                        
+                        return matchesSearch && matchesStatus;
+                    });
+                },
+                
+                get filteredGlobalSkills() {
+                    return this.globalSkills.filter(skill => {
+                        const matchesSearch = !this.skillSearchFilter || 
+                            skill.name.toLowerCase().includes(this.skillSearchFilter.toLowerCase()) ||
+                            skill.description.toLowerCase().includes(this.skillSearchFilter.toLowerCase());
+                        const matchesCategory = !this.skillCategoryFilter || skill.category === this.skillCategoryFilter;
+                        return matchesSearch && matchesCategory;
+                    });
+                },
+
+                // Enhanced skill management methods
+                getTeamMemberById(id) {
+                    return this.teamMembers.find(member => member.id === id);
+                },
+
+                getSkillCategoryBadgeClass(category) {
+                    const classes = {
+                        'Technical': 'bg-blue-100 text-blue-800',
+                        'Behavioral': 'bg-green-100 text-green-800',
+                        'Leadership': 'bg-purple-100 text-purple-800',
+                        'Domain': 'bg-orange-100 text-orange-800'
+                    };
+                    return classes[category] || 'bg-gray-100 text-gray-800';
+                },
+
+                getSkillUsageCount(skillId) {
+                    return this.teamMembers.reduce((count, member) => {
+                        return count + (member.skills?.some(skill => skill.id === skillId) ? 1 : 0);
+                    }, 0);
+                },
+
+                getSkillAverageLevel(skillId) {
+                    const skillInstances = [];
+                    this.teamMembers.forEach(member => {
+                        const skill = member.skills?.find(s => s.id === skillId);
+                        if (skill) skillInstances.push(skill.level);
+                    });
+                    
+                    if (skillInstances.length === 0) return 'N/A';
+                    const average = skillInstances.reduce((sum, level) => sum + level, 0) / skillInstances.length;
+                    return Math.round(average * 10) / 10;
+                },
+
+                // Drag and Drop functionality
+                toggleDragMode() {
+                    this.dragModeActive = !this.dragModeActive;
+                    if (!this.dragModeActive) {
+                        this.isDragging = false;
+                        this.currentDragSkill = null;
+                        this.dropTargetMember = null;
+                    }
+                },
+
+                handleDragStart(event, skill) {
+                    this.isDragging = true;
+                    this.currentDragSkill = skill;
+                    event.dataTransfer.setData('application/json', JSON.stringify(skill));
+                    event.dataTransfer.effectAllowed = 'copy';
+                },
+
+                handleDragEnd(event) {
+                    this.isDragging = false;
+                    this.currentDragSkill = null;
+                    this.dropTargetMember = null;
+                },
+
+                handleSkillDrop(event, member) {
+                    event.preventDefault();
+                    const skillData = JSON.parse(event.dataTransfer.getData('application/json'));
+                    this.assignSkillToMember(skillData, member);
+                    this.dropTargetMember = null;
+                },
+
+                assignSkillToMember(skill, member) {
+                    // Check if member already has this skill
+                    const existingSkill = member.skills?.find(s => s.id === skill.id);
+                    if (existingSkill) {
+                        alert(`${member.name} already has the skill "${skill.name}" at level ${existingSkill.level}`);
+                        return;
+                    }
+
+                    // Add skill to member with default level 1
+                    if (!member.skills) member.skills = [];
+                    member.skills.push({
+                        id: skill.id,
+                        level: 1,
+                        status: 'Opportunity',
+                        assignedDate: new Date().toISOString().split('T')[0],
+                        assignedBy: 'MGR001'
+                    });
+
+                    alert(`Successfully assigned "${skill.name}" to ${member.name} at level 1`);
+                },
+
+                // Modal and action handlers
+                openSkillReviewModal(request) {
+                    alert(`Opening detailed review for ${request.employeeName}'s ${request.skillName} update request...`);
+                },
+
+                openSkillAssignmentModal(skill) {
+                    this.selectedSkillForAssign = skill.id;
+                    alert(`Opening assignment interface for "${skill.name}". Select team members to assign this skill.`);
+                },
+
+                openSkillRatingModal(skill) {
+                    alert(`Opening rating interface for "${skill.name}". Select team members to rate their proficiency.`);
+                },
+                
+                getTeamMetrics() {
+                    const totalStrengths = this.teamMembers.reduce((sum, member) => sum + member.strengthCount, 0);
+                    const totalOpportunities = this.teamMembers.reduce((sum, member) => sum + member.opportunityCount, 0);
+                    return {
+                        avgStrengths: Math.round(totalStrengths / this.teamMembers.length) || 0,
+                        totalOpportunities
+                    };
+                },
+                
+                clearFilters() {
+                    this.skillStatusFilter = '';
+                    this.memberSearchFilter = '';
+                },
+                
+                selectTeamMember(member) {
+                    alert(`Opening ${member.name}'s profile...`);
+                },
+                
+                selectSkillForAssign(skill) {
+                    this.selectedSkillForAssign = skill.id;
+                    alert(`Selected ${skill.name} for assignment. Click on a team member to assign this skill.`);
+                },
+                
+                selectSkillForRating(skill) {
+                    alert(`Opening rating interface for ${skill.name}...`);
+                },
+                
+                approveSkillRequest(request) {
+                    alert(`Approved skill update for ${request.employeeName}`);
+                    this.skillUpdateRequests = this.skillUpdateRequests.filter(r => r.id !== request.id);
+                },
+                
+                rejectSkillRequest(request) {
+                    alert(`Rejected skill update for ${request.employeeName}`);
+                    this.skillUpdateRequests = this.skillUpdateRequests.filter(r => r.id !== request.id);
+                },
+                
+                formatDate(dateString) {
+                    return new Date(dateString).toLocaleDateString();
+                },
+
+                // Progress Tracking Functions
+                selectedProgressMember: null,
+                expandedPlans: new Set(),
+
+                getActiveDevelopmentPlansCount(memberId) {
+                    const member = this.getTeamMemberById(memberId);
+                    if (!member || !member.developmentPlans) return 0;
+                    return member.developmentPlans.filter(plan => plan.status === 'Active').length;
+                },
+
+                getMemberDevelopmentPlans(memberId) {
+                    const member = this.getTeamMemberById(memberId);
+                    if (!member || !member.developmentPlans) return [];
+                    return member.developmentPlans.filter(plan => plan.status === 'Active');
+                },
+
+                getOverallProgress(memberId) {
+                    const plans = this.getMemberDevelopmentPlans(memberId);
+                    if (plans.length === 0) return 0;
+                    
+                    const totalProgress = plans.reduce((sum, plan) => sum + this.getPlanProgress(plan), 0);
+                    return Math.round(totalProgress / plans.length);
+                },
+
+                getMemberProgressStats(memberId) {
+                    const plans = this.getMemberDevelopmentPlans(memberId);
+                    let totalSkills = 0;
+                    let completedSkills = 0;
+                    let inProgressSkills = 0;
+                    let notStartedSkills = 0;
+
+                    plans.forEach(plan => {
+                        if (plan.skills) {
+                            plan.skills.forEach(skill => {
+                                totalSkills++;
+                                switch (skill.progress) {
+                                    case 'Completed':
+                                        completedSkills++;
+                                        break;
+                                    case 'In Progress':
+                                        inProgressSkills++;
+                                        break;
+                                    case 'Not Started':
+                                        notStartedSkills++;
+                                        break;
+                                }
+                            });
+                        }
+                    });
+
+                    return {
+                        totalSkills,
+                        completedSkills,
+                        inProgressSkills,
+                        notStartedSkills
+                    };
+                },
+
+                getPlanProgress(plan) {
+                    if (!plan.skills || plan.skills.length === 0) return 0;
+                    
+                    const totalSkills = plan.skills.length;
+                    const completedSkills = plan.skills.filter(skill => skill.progress === 'Completed').length;
+                    const inProgressSkills = plan.skills.filter(skill => skill.progress === 'In Progress').length;
+                    
+                    // Completed skills count as 100%, in progress as 50%
+                    const progressScore = (completedSkills * 100 + inProgressSkills * 50) / totalSkills;
+                    return Math.round(progressScore);
+                },
+
+                togglePlanExpansion(planId) {
+                    if (this.expandedPlans.has(planId)) {
+                        this.expandedPlans.delete(planId);
+                    } else {
+                        this.expandedPlans.add(planId);
+                    }
+                },
+
+                isPlanExpanded(planId) {
+                    return this.expandedPlans.has(planId);
+                },
+
+                getSkillProgressNodeClass(progress) {
+                    switch (progress) {
+                        case 'Completed':
+                            return 'bg-green-500 border-green-500';
+                        case 'In Progress':
+                            return 'bg-yellow-500 border-yellow-500';
+                        case 'Not Started':
+                            return 'bg-gray-300 border-gray-300';
+                        default:
+                            return 'bg-gray-300 border-gray-300';
+                    }
+                },
+
+                getProgressBadgeClass(progress) {
+                    switch (progress) {
+                        case 'Completed':
+                            return 'bg-green-100 text-green-800';
+                        case 'In Progress':
+                            return 'bg-yellow-100 text-yellow-800';
+                        case 'Not Started':
+                            return 'bg-gray-100 text-gray-800';
+                        default:
+                            return 'bg-gray-100 text-gray-800';
+                    }
+                },
+
+                getSkillProgressBarClass(progress) {
+                    switch (progress) {
+                        case 'Completed':
+                            return 'bg-green-500';
+                        case 'In Progress':
+                            return 'bg-yellow-500';
+                        case 'Not Started':
+                            return 'bg-gray-300';
+                        default:
+                            return 'bg-gray-300';
+                    }
+                },
+
+                getSkillActivities(planId, skillId) {
+                    // Mock activities for demonstration
+                    const activities = [
+                        {
+                            id: 1,
+                            planId: 1,
+                            skillId: 1,
+                            name: 'Complete React Fundamentals Course',
+                            scheduledDate: '2024-02-15',
+                            status: 'Completed'
+                        },
+                        {
+                            id: 2,
+                            planId: 1,
+                            skillId: 1,
+                            name: 'Build Sample Project',
+                            scheduledDate: '2024-03-01',
+                            status: 'In Progress'
+                        },
+                        {
+                            id: 3,
+                            planId: 1,
+                            skillId: 2,
+                            name: 'Docker Workshop',
+                            scheduledDate: '2024-02-20',
+                            status: 'Not Started'
+                        }
+                    ];
+                    
+                    return activities.filter(activity => 
+                        activity.planId === planId && activity.skillId === skillId
+                    );
+                },
+
+                updateSkillProgress(skill) {
+                    // Mock function to update skill progress
+                    const newProgress = ['Not Started', 'In Progress', 'Completed'];
+                    const currentIndex = newProgress.indexOf(skill.progress);
+                    const nextIndex = (currentIndex + 1) % newProgress.length;
+                    skill.progress = newProgress[nextIndex];
+                    skill.lastUpdated = new Date().toLocaleDateString();
+                    
+                    // Update current level based on progress
+                    if (skill.progress === 'In Progress') {
+                        skill.currentLevel = Math.min(skill.currentLevel + 0.5, skill.targetLevel);
+                    } else if (skill.progress === 'Completed') {
+                        skill.currentLevel = skill.targetLevel;
+                    }
+                },
+
+                createDevelopmentPlanForMember(memberId) {
+                    this.showProgressTracker = false;
+                    this.showCreateDevelopmentPlan = true;
+                    alert(`Creating new development plan for member ${memberId}`);
+                },
+
+                exportProgressReport(memberId) {
+                    const member = this.getTeamMemberById(memberId);
+                    if (member) {
+                        alert(`Exporting progress report for ${member.name}...`);
+                        // Mock export functionality
+                        console.log('Progress report data:', {
+                            member: member.name,
+                            plans: this.getMemberDevelopmentPlans(memberId),
+                            stats: this.getMemberProgressStats(memberId)
+                        });
+                    }
+                },
+
+                scheduleProgressReview(memberId) {
+                    const member = this.getTeamMemberById(memberId);
+                    if (member) {
+                        alert(`Scheduling progress review for ${member.name}...`);
+                        // Mock scheduling functionality
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
