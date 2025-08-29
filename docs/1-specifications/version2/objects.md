@@ -1,4 +1,25 @@
 # Objects and Attributes
+## Course
+- Course ID
+- Course Name
+- Course Description
+- Course Duration
+- Course Level (Beginner, Intermediate, Advanced)
+- Course Type (Self-paced, Instructor-led)
+- Learning Objectives
+- Prerequisites
+- Target Audience
+- Assessment Method
+- Certification Details
+
+## Employee Course
+- Employee ID
+- Course ID
+- Enrollment Date
+- Completion Date
+- Status (Not Started, In Progress, Completed)
+- Score (out of 100)
+- Feedback
 
 ## Skill
 - Skill ID

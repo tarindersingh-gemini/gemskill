@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - Course Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e'
+                        },
+                        accent: {
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'bounce-subtle': 'bounceSubtle 2s infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes bounceSubtle {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        .card-hover {
+            transition: all 0.3s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen" x-data="dashboardApp()">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo and Title -->
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Manager Dashboard</h1>
+                        <p class="text-sm text-gray-600">Course Management & Team Progress</p>
+                    </div>
+                </div>
+                
+                <!-- Manager Profile -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-900" x-text="manager.name"></p>
+                        <p class="text-xs text-gray-500" x-text="manager.designation"></p>
+                    </div>
+                    <img :src="manager.profilePicture" alt="Manager Avatar" class="w-10 h-10 rounded-full object-cover">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-primary-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Team Members</p>
+                        <p class="text-2xl font-bold text-gray-900" x-text="teamMembers.length"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-book text-accent-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Active Courses</p>
+                        <p class="text-2xl font-bold text-gray-900" x-text="courses.length"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-clock text-red-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Not Started</p>
+                        <p class="text-2xl font-bold text-gray-900" x-text="notStartedCourses"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-play-circle text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">In Progress</p>
+                        <p class="text-2xl font-bold text-gray-900" x-text="inProgressCourses"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <!-- Tab Navigation -->
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+                <div class="flex space-x-1 bg-gray-100 rounded-lg p-1 mb-4 lg:mb-0">
+                    <button 
+                        @click="activeTab = 'grid'"
+                        :class="activeTab === 'grid' ? 'bg-white text-primary-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                        class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200">
+                        <i class="fas fa-th-large mr-2"></i>Grid View
+                    </button>
+                    <button 
+                        @click="activeTab = 'matrix'"
+                        :class="activeTab === 'matrix' ? 'bg-white text-primary-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                        class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200">
+                        <i class="fas fa-table mr-2"></i>Matrix View
+                    </button>
+                    <button 
+                        @click="activeTab = 'org'"
+                        :class="activeTab === 'org' ? 'bg-white text-primary-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                        class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200">
+                        <i class="fas fa-sitemap mr-2"></i>Org View
+                    </button>
+                </div>
+                
+                <!-- Search and Filters -->
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            x-model="searchTerm"
+                            placeholder="Search courses or employees..."
+                            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent w-full sm:w-64">
+                    </div>
+                    
+                    <!-- Filter Dropdowns -->
+                    <select x-model="filterBy" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <option value="all">All Employees</option>
+                        <option value="direct">Direct Reports</option>
+                        <option value="indirect">Indirect Reports</option>
+                    </select>
+                    
+                    <select x-model="statusFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <option value="all">All Status</option>
+                        <option value="Not Started">Not Started</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div x-show="activeTab === 'grid'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-1 transform scale-100" class="animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <template x-for="course in filteredCourses" :key="course.id">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                        <!-- Course Header -->
+                        <div class="p-6 pb-4">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-2" x-text="course.name"></h3>
+                                    <p class="text-sm text-gray-600 line-clamp-2" x-text="course.description"></p>
+                                </div>
+                                <span :class="course.level === 'Advanced' ? 'bg-red-100 text-red-800' : course.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'" 
+                                      class="px-2 py-1 text-xs font-medium rounded-full" x-text="course.level"></span>
+                            </div>
+                            
+                            <!-- Course Details -->
+                            <div class="flex items-center text-sm text-gray-500 mb-4 space-x-4">
+                                <span><i class="fas fa-clock mr-1"></i><span x-text="course.duration"></span></span>
+                                <span><i class="fas fa-users mr-1"></i><span x-text="getEnrolledCount(course.id)"></span> enrolled</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Status Counts -->
+                        <div class="px-6 pb-4">
+                            <div class="grid grid-cols-3 gap-3 text-center">
+                                <div class="bg-red-50 rounded-lg p-3">
+                                    <div class="text-lg font-bold text-red-600" x-text="getCourseStatusCounts(course.id).notStarted"></div>
+                                    <div class="text-xs text-red-600">Not Started</div>
+                                </div>
+                                <div class="bg-yellow-50 rounded-lg p-3">
+                                    <div class="text-lg font-bold text-yellow-600" x-text="getCourseStatusCounts(course.id).inProgress"></div>
+                                    <div class="text-xs text-yellow-600">In Progress</div>
+                                </div>
+                                <div class="bg-green-50 rounded-lg p-3">
+                                    <div class="text-lg font-bold text-green-600" x-text="getCourseStatusCounts(course.id).completed"></div>
+                                    <div class="text-xs text-green-600">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Status -->
+                        <div class="px-6 pb-6">
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">Team Status</h4>
+                            <div class="space-y-3">
+                                <template x-for="enrollment in getCourseEnrollments(course.id)" :key="enrollment.employeeId">
+                                    <div class="flex items-center space-x-3">
+                                        <img :src="getEmployee(enrollment.employeeId)?.profilePicture" :alt="getEmployee(enrollment.employeeId)?.name" class="w-8 h-8 rounded-full object-cover">
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm font-medium text-gray-900" x-text="getEmployee(enrollment.employeeId)?.name"></span>
+                                                <span :class="getStatusColor(enrollment.status)" class="px-2 py-1 text-xs font-medium rounded-full" x-text="enrollment.status"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        
+                        <!-- Course Actions -->
+                        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                            <button @click="selectedCourse = course; showCourseDetail = true" 
+                                    class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Matrix View -->
+        <div x-show="activeTab === 'matrix'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-1 transform scale-100" class="animate-fade-in">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200">
+                                <th class="text-left py-4 px-6 font-medium text-gray-900 sticky left-0 bg-gray-50 z-10 min-w-[200px]">Team Member</th>
+                                <template x-for="course in filteredCourses" :key="course.id">
+                                    <th class="text-center py-4 px-4 font-medium text-gray-900 min-w-[160px]">
+                                        <div class="text-sm" x-text="course.name"></div>
+                                        <div class="text-xs text-gray-500 mt-1" x-text="course.level"></div>
+                                    </th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <template x-for="member in filteredTeamMembers" :key="member.id">
+                                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                    <td class="py-4 px-6 sticky left-0 bg-white hover:bg-gray-50 z-10 border-r border-gray-200">
+                                        <div class="flex items-center space-x-3">
+                                            <img :src="member.profilePicture" :alt="member.name" class="w-10 h-10 rounded-full object-cover">
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900" x-text="member.name"></div>
+                                                <div class="text-xs text-gray-500" x-text="member.designation"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <template x-for="course in filteredCourses" :key="course.id">
+                                        <td class="py-4 px-4 text-center">
+                                            <template x-for="enrollment in employeeCourses.filter(ec => ec.employeeId === member.id && ec.courseId === course.id)" :key="enrollment.courseId">
+                                                <div class="space-y-2">
+                                                    <span :class="getStatusColor(enrollment.status)" class="px-2 py-1 text-xs font-medium rounded-full" x-text="enrollment.status"></span>
+                                                    <div class="w-full bg-gray-200 rounded-full h-2 mx-auto max-w-[100px]">
+                                                        <div :class="getProgressColor(enrollment.status)" 
+                                                             :style="`width: ${getProgress(enrollment)}%`"
+                                                             class="h-2 rounded-full progress-bar"></div>
+                                                    </div>
+                                                    <template x-if="enrollment.score">
+                                                        <div class="text-xs text-gray-600" x-text="enrollment.score + '%'"></div>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                            <template x-if="!employeeCourses.some(ec => ec.employeeId === member.id && ec.courseId === course.id)">
+                                                <div class="text-gray-400 text-sm">Not Enrolled</div>
+                                            </template>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Org View -->
+        <div x-show="activeTab === 'org'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-1 transform scale-100" class="animate-fade-in">
+            <div class="bg-white rounded-xl shadow-md p-8">
+                <!-- Manager Node -->
+                <div class="flex flex-col items-center mb-8">
+                    <div class="relative bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-6 shadow-lg text-white cursor-pointer transform hover:scale-105 transition-all duration-200"
+                         @click="selectedEmployee = manager; showEmployeeDetail = true">
+                        <div class="flex items-center space-x-4">
+                            <img :src="manager.profilePicture" :alt="manager.name" class="w-16 h-16 rounded-full border-4 border-white object-cover">
+                            <div>
+                                <h3 class="text-lg font-bold" x-text="manager.name"></h3>
+                                <p class="text-primary-100 text-sm" x-text="manager.designation"></p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-4 mt-4 text-center">
+                            <div class="bg-white bg-opacity-20 rounded-lg p-2">
+                                <div class="text-2xl font-bold" x-text="getEmployeeCourseStats(manager.id).total"></div>
+                                <div class="text-xs text-primary-100">Total</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-2">
+                                <div class="text-2xl font-bold" x-text="getEmployeeCourseStats(manager.id).notStarted"></div>
+                                <div class="text-xs text-primary-100">Not Started</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-2">
+                                <div class="text-2xl font-bold" x-text="getEmployeeCourseStats(manager.id).inProgress"></div>
+                                <div class="text-xs text-primary-100">In Progress</div>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-2">
+                                <div class="text-2xl font-bold" x-text="getEmployeeCourseStats(manager.id).completed"></div>
+                                <div class="text-xs text-primary-100">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Connection Line -->
+                    <div class="w-px h-8 bg-gray-300"></div>
+                </div>
+
+                <!-- Direct Reports -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-6 text-center">Direct Reports</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <template x-for="member in teamMembers.filter(m => m.isDirect)" :key="member.id">
+                            <div class="relative">
+                                <!-- Connection line to parent -->
+                                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 w-px h-8 bg-gray-300"></div>
+                                
+                                <div class="bg-white border-2 border-gray-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer transform hover:scale-105"
+                                     @click="selectedEmployee = member; showEmployeeDetail = true">
+                                    <div class="flex items-center space-x-3 mb-4">
+                                        <img :src="member.profilePicture" :alt="member.name" class="w-12 h-12 rounded-full object-cover">
+                                        <div class="flex-1">
+                                            <h5 class="font-semibold text-gray-900 text-sm" x-text="member.name"></h5>
+                                            <p class="text-xs text-gray-600" x-text="member.designation"></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-4 gap-2 text-center">
+                                        <div class="bg-gray-50 rounded-lg p-2">
+                                            <div class="text-lg font-bold text-gray-900" x-text="getEmployeeCourseStats(member.id).total"></div>
+                                            <div class="text-xs text-gray-500">Total</div>
+                                        </div>
+                                        <div class="bg-red-50 rounded-lg p-2">
+                                            <div class="text-lg font-bold text-red-600" x-text="getEmployeeCourseStats(member.id).notStarted"></div>
+                                            <div class="text-xs text-red-500">Not Started</div>
+                                        </div>
+                                        <div class="bg-yellow-50 rounded-lg p-2">
+                                            <div class="text-lg font-bold text-yellow-600" x-text="getEmployeeCourseStats(member.id).inProgress"></div>
+                                            <div class="text-xs text-yellow-500">In Progress</div>
+                                        </div>
+                                        <div class="bg-green-50 rounded-lg p-2">
+                                            <div class="text-lg font-bold text-green-600" x-text="getEmployeeCourseStats(member.id).completed"></div>
+                                            <div class="text-xs text-green-500">Completed</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Indirect Reports -->
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-900 mb-6 text-center">Indirect Reports</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        <template x-for="member in teamMembers.filter(m => !m.isDirect)" :key="member.id">
+                            <div class="bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105"
+                                 @click="selectedEmployee = member; showEmployeeDetail = true">
+                                <div class="flex items-center space-x-2 mb-3">
+                                    <img :src="member.profilePicture" :alt="member.name" class="w-8 h-8 rounded-full object-cover">
+                                    <div class="flex-1 min-w-0">
+                                        <h6 class="font-medium text-gray-900 text-xs truncate" x-text="member.name"></h6>
+                                        <p class="text-xs text-gray-500 truncate" x-text="member.designation"></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-1 text-center">
+                                    <div class="bg-yellow-50 rounded p-1">
+                                        <div class="text-sm font-bold text-yellow-600" x-text="getEmployeeCourseStats(member.id).inProgress"></div>
+                                        <div class="text-xs text-yellow-500">Progress</div>
+                                    </div>
+                                    <div class="bg-green-50 rounded p-1">
+                                        <div class="text-sm font-bold text-green-600" x-text="getEmployeeCourseStats(member.id).completed"></div>
+                                        <div class="text-xs text-green-500">Done</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Employee Detail Modal -->
+    <div x-show="showEmployeeDetail" 
+         x-transition:enter="transition ease-out duration-300" 
+         x-transition:enter-start="opacity-0" 
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200" 
+         x-transition:leave-start="opacity-100" 
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+         @click.self="showEmployeeDetail = false">
+        <div x-show="showEmployeeDetail"
+             x-transition:enter="transition ease-out duration-300" 
+             x-transition:enter-start="opacity-0 transform scale-95" 
+             x-transition:enter-end="opacity-1 transform scale-100"
+             x-transition:leave="transition ease-in duration-200" 
+             x-transition:leave-start="opacity-1 transform scale-100" 
+             x-transition:leave-end="opacity-0 transform scale-95"
+             class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-xl">
+                <div class="flex items-center space-x-4">
+                    <img :src="selectedEmployee?.profilePicture" :alt="selectedEmployee?.name" class="w-12 h-12 rounded-full object-cover">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900" x-text="selectedEmployee?.name"></h2>
+                        <p class="text-sm text-gray-600" x-text="selectedEmployee?.designation"></p>
+                    </div>
+                </div>
+                <button @click="showEmployeeDetail = false" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Content -->
+            <div class="p-6">
+                <!-- Course Statistics Summary -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-gray-50 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-gray-900" x-text="getEmployeeCourseStats(selectedEmployee?.id).total"></div>
+                        <div class="text-sm text-gray-600">Total Assigned</div>
+                    </div>
+                    <div class="bg-red-50 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-red-600" x-text="getEmployeeCourseStats(selectedEmployee?.id).notStarted"></div>
+                        <div class="text-sm text-red-600">Not Started</div>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-yellow-600" x-text="getEmployeeCourseStats(selectedEmployee?.id).inProgress"></div>
+                        <div class="text-sm text-yellow-600">In Progress</div>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-green-600" x-text="getEmployeeCourseStats(selectedEmployee?.id).completed"></div>
+                        <div class="text-sm text-green-600">Completed</div>
+                    </div>
+                </div>
+                
+                <!-- Course Lists -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Not Started Courses -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-red-900 mb-4 flex items-center">
+                            <i class="fas fa-pause-circle text-red-600 mr-2"></i>
+                            Not Started Courses
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="course in getEmployeeCoursesByStatus(selectedEmployee?.id, 'Not Started')" :key="'not-started-' + course.id">
+                                <div class="border border-red-200 rounded-lg p-3 bg-red-50">
+                                    <h4 class="font-medium text-gray-900" x-text="course.name"></h4>
+                                    <p class="text-sm text-gray-600 mt-1" x-text="course.level + ' • ' + course.duration"></p>
+                                </div>
+                            </template>
+                            <template x-if="getEmployeeCoursesByStatus(selectedEmployee?.id, 'Not Started').length === 0">
+                                <p class="text-gray-500 text-sm italic">No courses pending to start</p>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- In Progress Courses -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-yellow-900 mb-4 flex items-center">
+                            <i class="fas fa-play-circle text-yellow-600 mr-2"></i>
+                            In Progress Courses
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="courseData in getEmployeeCoursesWithEnrollment(selectedEmployee?.id, 'In Progress')" :key="'in-progress-' + courseData.course.id">
+                                <div class="border border-yellow-200 rounded-lg p-3 bg-yellow-50">
+                                    <h4 class="font-medium text-gray-900" x-text="courseData.course.name"></h4>
+                                    <p class="text-sm text-gray-600 mt-1" x-text="courseData.course.level + ' • ' + courseData.course.duration"></p>
+                                    <div class="mt-2">
+                                        <div class="flex items-center justify-between text-sm text-gray-600 mb-1">
+                                            <span>Progress</span>
+                                            <span>65%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 65%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template x-if="getEmployeeCoursesByStatus(selectedEmployee?.id, 'In Progress').length === 0">
+                                <p class="text-gray-500 text-sm italic">No courses currently in progress</p>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Completed Courses -->
+                    <div class="lg:col-span-2">
+                        <h3 class="text-lg font-semibold text-green-900 mb-4 flex items-center">
+                            <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                            Completed Courses
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <template x-for="courseData in getEmployeeCoursesWithEnrollment(selectedEmployee?.id, 'Completed')" :key="'completed-' + courseData.course.id">
+                                <div class="border border-green-200 rounded-lg p-4 bg-green-50">
+                                    <div class="flex items-start justify-between mb-2">
+                                        <h4 class="font-medium text-gray-900" x-text="courseData.course.name"></h4>
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full" x-text="courseData.enrollment.score + '%'"></span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-2" x-text="courseData.course.level + ' • ' + courseData.course.duration"></p>
+                                    <div class="text-xs text-gray-500">
+                                        Completed: <span x-text="new Date(courseData.enrollment.completionDate).toLocaleDateString()"></span>
+                                    </div>
+                                    <template x-if="courseData.enrollment.feedback">
+                                        <div class="mt-2 p-2 bg-green-100 rounded text-xs text-green-800">
+                                            <i class="fas fa-comment mr-1"></i>
+                                            <span x-text="courseData.enrollment.feedback"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                            <template x-if="getEmployeeCoursesByStatus(selectedEmployee?.id, 'Completed').length === 0">
+                                <p class="text-gray-500 text-sm italic">No courses completed yet</p>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Detail Modal -->
+    <div x-show="showCourseDetail" 
+         x-transition:enter="transition ease-out duration-300" 
+         x-transition:enter-start="opacity-0" 
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200" 
+         x-transition:leave-start="opacity-100" 
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+         @click.self="showCourseDetail = false">
+        <div x-show="showCourseDetail"
+             x-transition:enter="transition ease-out duration-300" 
+             x-transition:enter-start="opacity-0 transform scale-95" 
+             x-transition:enter-end="opacity-1 transform scale-100"
+             x-transition:leave="transition ease-in duration-200" 
+             x-transition:leave-start="opacity-1 transform scale-100" 
+             x-transition:leave-end="opacity-0 transform scale-95"
+             class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-xl">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900" x-text="selectedCourse?.name"></h2>
+                    <p class="text-sm text-gray-600" x-text="selectedCourse?.type + ' • ' + selectedCourse?.duration"></p>
+                </div>
+                <button @click="showCourseDetail = false" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Content -->
+            <div class="p-6">
+                <!-- Course Info -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="lg:col-span-2">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Course Description</h3>
+                        <p class="text-gray-700 mb-6" x-text="selectedCourse?.description"></p>
+                        
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Learning Objectives</h3>
+                        <ul class="space-y-2">
+                            <template x-for="objective in selectedCourse?.learningObjectives" :key="objective">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                    <span class="text-gray-700" x-text="objective"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-gray-50 rounded-lg p-4 space-y-4">
+                            <div>
+                                <span class="text-sm font-medium text-gray-500">Level</span>
+                                <div :class="selectedCourse?.level === 'Advanced' ? 'bg-red-100 text-red-800' : selectedCourse?.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'" 
+                                     class="mt-1 px-2 py-1 text-sm font-medium rounded-full inline-block" x-text="selectedCourse?.level"></div>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-500">Duration</span>
+                                <p class="text-sm text-gray-900" x-text="selectedCourse?.duration"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-500">Assessment</span>
+                                <p class="text-sm text-gray-900" x-text="selectedCourse?.assessmentMethod"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-500">Certification</span>
+                                <p class="text-sm text-gray-900" x-text="selectedCourse?.certificationDetails"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Team Progress -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Team Member Progress</h3>
+                    <div class="space-y-4">
+                        <template x-for="enrollment in getCourseEnrollments(selectedCourse?.id)" :key="enrollment.employeeId">
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-3">
+                                        <img :src="getEmployee(enrollment.employeeId)?.profilePicture" :alt="getEmployee(enrollment.employeeId)?.name" class="w-12 h-12 rounded-full object-cover">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900" x-text="getEmployee(enrollment.employeeId)?.name"></h4>
+                                            <p class="text-sm text-gray-600" x-text="getEmployee(enrollment.employeeId)?.designation"></p>
+                                        </div>
+                                    </div>
+                                    <span :class="getStatusColor(enrollment.status)" class="px-3 py-1 text-sm font-medium rounded-full" x-text="enrollment.status"></span>
+                                </div>
+                                
+                                <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
+                                    <div :class="getProgressColor(enrollment.status)" 
+                                         :style="`width: ${getProgress(enrollment)}%`"
+                                         class="h-3 rounded-full progress-bar"></div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between text-sm text-gray-600">
+                                    <span>Enrolled: <span x-text="new Date(enrollment.enrollmentDate).toLocaleDateString()"></span></span>
+                                    <template x-if="enrollment.score">
+                                        <span>Score: <span x-text="enrollment.score + '%'"></span></span>
+                                    </template>
+                                </div>
+                                
+                                <template x-if="enrollment.feedback">
+                                    <div class="mt-2 p-2 bg-blue-50 rounded text-sm text-blue-800">
+                                        <i class="fas fa-comment mr-1"></i>
+                                        <span x-text="enrollment.feedback"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Embedded data to avoid CORS issues with local files
+        const MANAGER_DATA = {
+            "manager": {
+                "id": "MGR001",
+                "name": "Sarah Johnson",
+                "email": "sarah.johnson@company.com",
+                "phone": "+1-555-0456",
+                "designation": "Engineering Manager",
+                "department": "Engineering",
+                "location": "San Francisco, CA",
+                "profilePicture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                "teamSize": 20,
+                "directReports": ["EMP001", "EMP002", "EMP003", "EMP004", "EMP005", "EMP006", "EMP007"],
+                "indirectReports": ["EMP008", "EMP009", "EMP010", "EMP011", "EMP012", "EMP013", "EMP014", "EMP015", "EMP016", "EMP017", "EMP018", "EMP019", "EMP020"]
+            },
+            "teamMembers": [
+                {
+                    "id": "EMP001",
+                    "name": "John Doe",
+                    "designation": "Software Engineer - L2",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "MGR001",
+                    "isDirect": true
+                },
+                {
+                    "id": "EMP002",
+                    "name": "Emily Chen",
+                    "designation": "Software Engineer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "MGR001",
+                    "isDirect": true
+                },
+                {
+                    "id": "EMP003",
+                    "name": "Michael Rodriguez",
+                    "designation": "Senior Software Engineer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "MGR001",
+                    "isDirect": true
+                },
+                {
+                    "id": "EMP004",
+                    "name": "Lisa Wang",
+                    "designation": "Software Engineer - L2",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "MGR001",
+                    "isDirect": true
+                },
+                {
+                    "id": "EMP005",
+                    "name": "David Kim",
+                    "designation": "Lead Software Engineer",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "MGR001",
+                    "isDirect": true
+                },
+                {
+                    "id": "EMP006",
+                    "name": "Sarah Martinez",
+                    "designation": "Software Engineer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1494790108755-2616b612b8e5?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "MGR001",
+                    "isDirect": true
+                },
+                {
+                    "id": "EMP007",
+                    "name": "Alex Thompson",
+                    "designation": "Senior Software Engineer - L2",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "MGR001",
+                    "isDirect": true
+                },
+                {
+                    "id": "EMP008",
+                    "name": "Rachel Green",
+                    "designation": "Frontend Developer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL001",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP009",
+                    "name": "James Wilson",
+                    "designation": "Backend Developer - L2",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL001",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP010",
+                    "name": "Maria Garcia",
+                    "designation": "QA Engineer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL002",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP011",
+                    "name": "Robert Brown",
+                    "designation": "DevOps Engineer - L2",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL002",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP012",
+                    "name": "Jennifer Lee",
+                    "designation": "Software Engineer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL001",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP013",
+                    "name": "Kevin Davis",
+                    "designation": "Full Stack Developer - L2",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL001",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP014",
+                    "name": "Amanda White",
+                    "designation": "UI/UX Developer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL002",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP015",
+                    "name": "Christopher Taylor",
+                    "designation": "Senior Backend Developer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL001",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP016",
+                    "name": "Jessica Anderson",
+                    "designation": "Software Engineer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL002",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP017",
+                    "name": "Daniel Johnson",
+                    "designation": "Mobile Developer - L2",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL002",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP018",
+                    "name": "Nicole Miller",
+                    "designation": "Data Engineer - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1594736797933-d0a8ba4a4932?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL002",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP019",
+                    "name": "Matthew Wilson",
+                    "designation": "Software Architect - L1",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL001",
+                    "isDirect": false
+                },
+                {
+                    "id": "EMP020",
+                    "name": "Stephanie Davis",
+                    "designation": "Security Engineer - L2",
+                    "department": "Engineering",
+                    "profilePicture": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop&crop=face",
+                    "reportingTo": "TL002",
+                    "isDirect": false
+                }
+            ]
+        };
+
+        const COURSES_DATA = {
+            "courses": [
+                {
+                    "id": "COURSE001",
+                    "name": "Advanced Python Development",
+                    "description": "Master advanced Python concepts including metaclasses, decorators, and performance optimization",
+                    "duration": "40 hours",
+                    "level": "Advanced",
+                    "type": "Self-paced",
+                    "learningObjectives": [
+                        "Understand advanced Python concepts",
+                        "Implement design patterns in Python",
+                        "Optimize Python code for performance",
+                        "Master Python testing frameworks"
+                    ],
+                    "prerequisites": ["Python Fundamentals", "Object-Oriented Programming"],
+                    "targetAudience": "Mid to Senior Software Engineers",
+                    "assessmentMethod": "Project-based assessment",
+                    "certificationDetails": "Advanced Python Developer Certificate"
+                },
+                {
+                    "id": "COURSE002",
+                    "name": "Microservices Architecture",
+                    "description": "Learn to design, build, and deploy scalable microservices using modern patterns",
+                    "duration": "35 hours",
+                    "level": "Intermediate",
+                    "type": "Instructor-led",
+                    "learningObjectives": [
+                        "Design microservices architecture",
+                        "Implement service communication patterns",
+                        "Handle distributed system challenges",
+                        "Deploy microservices using containers"
+                    ],
+                    "prerequisites": ["REST APIs", "Docker Basics"],
+                    "targetAudience": "Software Engineers and Architects",
+                    "assessmentMethod": "Hands-on project",
+                    "certificationDetails": "Microservices Architecture Certificate"
+                },
+                {
+                    "id": "COURSE003",
+                    "name": "Cloud Infrastructure with AWS",
+                    "description": "Comprehensive course on AWS cloud services and infrastructure management",
+                    "duration": "50 hours",
+                    "level": "Intermediate",
+                    "type": "Self-paced",
+                    "learningObjectives": [
+                        "Deploy applications on AWS",
+                        "Manage cloud infrastructure",
+                        "Implement security best practices",
+                        "Monitor and optimize costs"
+                    ],
+                    "prerequisites": ["Basic Cloud Concepts"],
+                    "targetAudience": "DevOps Engineers and Software Engineers",
+                    "assessmentMethod": "AWS certification exam",
+                    "certificationDetails": "AWS Solutions Architect Associate"
+                },
+                {
+                    "id": "COURSE004",
+                    "name": "Design Patterns in Software Engineering",
+                    "description": "Learn and apply common design patterns for maintainable software architecture",
+                    "duration": "25 hours",
+                    "level": "Intermediate",
+                    "type": "Self-paced",
+                    "learningObjectives": [
+                        "Understand Gang of Four patterns",
+                        "Apply patterns in real-world scenarios",
+                        "Improve code maintainability",
+                        "Make better architectural decisions"
+                    ],
+                    "prerequisites": ["Object-Oriented Programming"],
+                    "targetAudience": "Software Engineers",
+                    "assessmentMethod": "Code review and quiz",
+                    "certificationDetails": "Software Design Patterns Certificate"
+                },
+                {
+                    "id": "COURSE005",
+                    "name": "Leadership and Communication",
+                    "description": "Develop essential leadership skills and effective communication techniques",
+                    "duration": "30 hours",
+                    "level": "Beginner",
+                    "type": "Instructor-led",
+                    "learningObjectives": [
+                        "Develop leadership skills",
+                        "Improve communication techniques",
+                        "Learn conflict resolution",
+                        "Build high-performing teams"
+                    ],
+                    "prerequisites": [],
+                    "targetAudience": "All team members",
+                    "assessmentMethod": "Peer feedback and presentation",
+                    "certificationDetails": "Leadership Excellence Certificate"
+                },
+                {
+                    "id": "COURSE006",
+                    "name": "Agile Project Management",
+                    "description": "Master Agile methodologies and project management best practices",
+                    "duration": "20 hours",
+                    "level": "Beginner",
+                    "type": "Self-paced",
+                    "learningObjectives": [
+                        "Understand Agile principles",
+                        "Implement Scrum framework",
+                        "Manage project timelines",
+                        "Facilitate team ceremonies"
+                    ],
+                    "prerequisites": [],
+                    "targetAudience": "Project Managers and Team Leads",
+                    "assessmentMethod": "Scrum simulation exercise",
+                    "certificationDetails": "Certified Scrum Master"
+                },
+                {
+                    "id": "COURSE007",
+                    "name": "DevOps and CI/CD Pipelines",
+                    "description": "Learn modern DevOps practices and continuous integration/deployment strategies",
+                    "duration": "45 hours",
+                    "level": "Intermediate",
+                    "type": "Instructor-led",
+                    "learningObjectives": [
+                        "Implement CI/CD pipelines",
+                        "Master containerization with Docker",
+                        "Deploy using Kubernetes",
+                        "Monitor and maintain systems"
+                    ],
+                    "prerequisites": ["Linux Basics", "Version Control"],
+                    "targetAudience": "DevOps Engineers and Backend Developers",
+                    "assessmentMethod": "Pipeline implementation project",
+                    "certificationDetails": "DevOps Professional Certificate"
+                },
+                {
+                    "id": "COURSE008",
+                    "name": "React.js Frontend Development",
+                    "description": "Build modern, responsive web applications using React.js ecosystem",
+                    "duration": "35 hours",
+                    "level": "Intermediate",
+                    "type": "Self-paced",
+                    "learningObjectives": [
+                        "Master React components and hooks",
+                        "Implement state management with Redux",
+                        "Build responsive user interfaces",
+                        "Optimize performance and testing"
+                    ],
+                    "prerequisites": ["JavaScript Fundamentals", "HTML/CSS"],
+                    "targetAudience": "Frontend Developers",
+                    "assessmentMethod": "Full-stack application project",
+                    "certificationDetails": "React.js Developer Certificate"
+                },
+                {
+                    "id": "COURSE009",
+                    "name": "Database Design and Optimization",
+                    "description": "Advanced database concepts, optimization techniques, and performance tuning",
+                    "duration": "30 hours",
+                    "level": "Advanced",
+                    "type": "Instructor-led",
+                    "learningObjectives": [
+                        "Design efficient database schemas",
+                        "Optimize query performance",
+                        "Implement database security",
+                        "Handle large-scale data operations"
+                    ],
+                    "prerequisites": ["SQL Fundamentals"],
+                    "targetAudience": "Backend Developers and Data Engineers",
+                    "assessmentMethod": "Database optimization project",
+                    "certificationDetails": "Database Specialist Certificate"
+                },
+                {
+                    "id": "COURSE010",
+                    "name": "Cybersecurity Fundamentals",
+                    "description": "Essential cybersecurity principles and best practices for software development",
+                    "duration": "25 hours",
+                    "level": "Beginner",
+                    "type": "Self-paced",
+                    "learningObjectives": [
+                        "Understand security threats and vulnerabilities",
+                        "Implement secure coding practices",
+                        "Perform security testing",
+                        "Handle incident response"
+                    ],
+                    "prerequisites": [],
+                    "targetAudience": "All developers and engineers",
+                    "assessmentMethod": "Security assessment and quiz",
+                    "certificationDetails": "Cybersecurity Awareness Certificate"
+                },
+                {
+                    "id": "COURSE011",
+                    "name": "Machine Learning for Developers",
+                    "description": "Introduction to machine learning concepts and practical implementation",
+                    "duration": "55 hours",
+                    "level": "Advanced",
+                    "type": "Instructor-led",
+                    "learningObjectives": [
+                        "Understand ML algorithms and models",
+                        "Implement data preprocessing pipelines",
+                        "Deploy ML models in production",
+                        "Evaluate model performance"
+                    ],
+                    "prerequisites": ["Python Programming", "Statistics Basics"],
+                    "targetAudience": "Software Engineers and Data Scientists",
+                    "assessmentMethod": "ML project implementation",
+                    "certificationDetails": "Machine Learning Practitioner Certificate"
+                }
+            ],
+            "employeeCourses": [
+                {"employeeId": "EMP001", "courseId": "COURSE001", "enrollmentDate": "2024-01-15", "completionDate": "2024-03-20", "status": "Completed", "score": 92, "feedback": "Excellent understanding of advanced concepts"},
+                {"employeeId": "EMP001", "courseId": "COURSE002", "enrollmentDate": "2024-04-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP001", "courseId": "COURSE005", "enrollmentDate": "2024-02-10", "completionDate": "2024-02-28", "status": "Completed", "score": 88, "feedback": "Good progress in leadership skills"},
+                {"employeeId": "EMP001", "courseId": "COURSE010", "enrollmentDate": "2024-06-01", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP002", "courseId": "COURSE001", "enrollmentDate": "2024-03-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP002", "courseId": "COURSE004", "enrollmentDate": "2024-01-20", "completionDate": "2024-03-15", "status": "Completed", "score": 85, "feedback": "Good grasp of design patterns"},
+                {"employeeId": "EMP002", "courseId": "COURSE005", "enrollmentDate": "2024-04-15", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP002", "courseId": "COURSE008", "enrollmentDate": "2024-05-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP003", "courseId": "COURSE003", "enrollmentDate": "2024-02-01", "completionDate": "2024-04-10", "status": "Completed", "score": 95, "feedback": "Excellent mastery of AWS fundamentals"},
+                {"employeeId": "EMP003", "courseId": "COURSE006", "enrollmentDate": "2024-04-20", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP003", "courseId": "COURSE009", "enrollmentDate": "2024-01-10", "completionDate": "2024-02-25", "status": "Completed", "score": 91, "feedback": "Strong database optimization skills"},
+                {"employeeId": "EMP003", "courseId": "COURSE011", "enrollmentDate": "2024-06-15", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP004", "courseId": "COURSE002", "enrollmentDate": "2024-03-10", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP004", "courseId": "COURSE005", "enrollmentDate": "2024-01-25", "completionDate": "2024-03-05", "status": "Completed", "score": 90, "feedback": "Excellent leadership potential"},
+                {"employeeId": "EMP004", "courseId": "COURSE007", "enrollmentDate": "2024-05-15", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP004", "courseId": "COURSE010", "enrollmentDate": "2024-02-01", "completionDate": "2024-02-20", "status": "Completed", "score": 87, "feedback": "Good understanding of security principles"},
+                {"employeeId": "EMP005", "courseId": "COURSE001", "enrollmentDate": "2024-01-05", "completionDate": "2024-02-15", "status": "Completed", "score": 98, "feedback": "Outstanding performance, mentor potential"},
+                {"employeeId": "EMP005", "courseId": "COURSE006", "enrollmentDate": "2024-03-01", "completionDate": "2024-03-20", "status": "Completed", "score": 94, "feedback": "Natural leadership abilities"},
+                {"employeeId": "EMP005", "courseId": "COURSE009", "enrollmentDate": "2024-04-01", "completionDate": "2024-05-10", "status": "Completed", "score": 96, "feedback": "Expert-level database skills"},
+                {"employeeId": "EMP005", "courseId": "COURSE011", "enrollmentDate": "2024-06-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP006", "courseId": "COURSE001", "enrollmentDate": "2024-04-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP006", "courseId": "COURSE005", "enrollmentDate": "2024-02-15", "completionDate": "2024-03-10", "status": "Completed", "score": 82, "feedback": "Improved communication skills significantly"},
+                {"employeeId": "EMP006", "courseId": "COURSE008", "enrollmentDate": "2024-05-20", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP006", "courseId": "COURSE010", "enrollmentDate": "2024-03-15", "completionDate": "2024-04-05", "status": "Completed", "score": 79, "feedback": "Basic security awareness achieved"},
+                {"employeeId": "EMP007", "courseId": "COURSE002", "enrollmentDate": "2024-02-10", "completionDate": "2024-04-15", "status": "Completed", "score": 93, "feedback": "Strong architectural thinking"},
+                {"employeeId": "EMP007", "courseId": "COURSE003", "enrollmentDate": "2024-05-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP007", "courseId": "COURSE006", "enrollmentDate": "2024-01-15", "completionDate": "2024-02-05", "status": "Completed", "score": 89, "feedback": "Good project management skills"},
+                {"employeeId": "EMP007", "courseId": "COURSE009", "enrollmentDate": "2024-06-10", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP008", "courseId": "COURSE008", "enrollmentDate": "2024-01-20", "completionDate": "2024-03-25", "status": "Completed", "score": 91, "feedback": "Excellent frontend development skills"},
+                {"employeeId": "EMP008", "courseId": "COURSE005", "enrollmentDate": "2024-04-10", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP008", "courseId": "COURSE010", "enrollmentDate": "2024-05-15", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP009", "courseId": "COURSE001", "enrollmentDate": "2024-02-01", "completionDate": "2024-04-05", "status": "Completed", "score": 88, "feedback": "Solid Python skills improvement"},
+                {"employeeId": "EMP009", "courseId": "COURSE002", "enrollmentDate": "2024-05-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP009", "courseId": "COURSE009", "enrollmentDate": "2024-03-15", "completionDate": "2024-05-20", "status": "Completed", "score": 85, "feedback": "Good database understanding"},
+                {"employeeId": "EMP010", "courseId": "COURSE004", "enrollmentDate": "2024-03-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP010", "courseId": "COURSE005", "enrollmentDate": "2024-01-10", "completionDate": "2024-02-15", "status": "Completed", "score": 86, "feedback": "Strong communication and testing skills"},
+                {"employeeId": "EMP010", "courseId": "COURSE010", "enrollmentDate": "2024-04-20", "completionDate": "2024-05-10", "status": "Completed", "score": 92, "feedback": "Excellent security awareness for QA"},
+                {"employeeId": "EMP011", "courseId": "COURSE003", "enrollmentDate": "2024-01-15", "completionDate": "2024-02-28", "status": "Completed", "score": 97, "feedback": "Outstanding cloud infrastructure knowledge"},
+                {"employeeId": "EMP011", "courseId": "COURSE007", "enrollmentDate": "2024-03-10", "completionDate": "2024-05-15", "status": "Completed", "score": 95, "feedback": "Master of DevOps practices"},
+                {"employeeId": "EMP011", "courseId": "COURSE010", "enrollmentDate": "2024-06-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP012", "courseId": "COURSE001", "enrollmentDate": "2024-03-15", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP012", "courseId": "COURSE008", "enrollmentDate": "2024-02-01", "completionDate": "2024-04-10", "status": "Completed", "score": 87, "feedback": "Good frontend development progress"},
+                {"employeeId": "EMP012", "courseId": "COURSE010", "enrollmentDate": "2024-05-01", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP013", "courseId": "COURSE001", "enrollmentDate": "2024-01-25", "completionDate": "2024-03-30", "status": "Completed", "score": 94, "feedback": "Excellent full-stack skills"},
+                {"employeeId": "EMP013", "courseId": "COURSE008", "enrollmentDate": "2024-04-15", "completionDate": "2024-06-20", "status": "Completed", "score": 93, "feedback": "Strong React.js implementation"},
+                {"employeeId": "EMP013", "courseId": "COURSE009", "enrollmentDate": "2024-07-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP014", "courseId": "COURSE008", "enrollmentDate": "2024-02-15", "completionDate": "2024-04-25", "status": "Completed", "score": 89, "feedback": "Great UI/UX integration with React"},
+                {"employeeId": "EMP014", "courseId": "COURSE005", "enrollmentDate": "2024-05-10", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP014", "courseId": "COURSE010", "enrollmentDate": "2024-06-15", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP015", "courseId": "COURSE001", "enrollmentDate": "2024-01-10", "completionDate": "2024-02-20", "status": "Completed", "score": 97, "feedback": "Master-level Python expertise"},
+                {"employeeId": "EMP015", "courseId": "COURSE002", "enrollmentDate": "2024-03-05", "completionDate": "2024-05-10", "status": "Completed", "score": 96, "feedback": "Expert microservices architect"},
+                {"employeeId": "EMP015", "courseId": "COURSE009", "enrollmentDate": "2024-06-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP015", "courseId": "COURSE011", "enrollmentDate": "2024-07-15", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP016", "courseId": "COURSE004", "enrollmentDate": "2024-02-20", "completionDate": "2024-04-15", "status": "Completed", "score": 84, "feedback": "Good understanding of design patterns"},
+                {"employeeId": "EMP016", "courseId": "COURSE005", "enrollmentDate": "2024-05-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP016", "courseId": "COURSE010", "enrollmentDate": "2024-03-10", "completionDate": "2024-04-05", "status": "Completed", "score": 88, "feedback": "Strong security awareness"},
+                {"employeeId": "EMP017", "courseId": "COURSE004", "enrollmentDate": "2024-01-30", "completionDate": "2024-03-20", "status": "Completed", "score": 86, "feedback": "Good mobile design patterns application"},
+                {"employeeId": "EMP017", "courseId": "COURSE008", "enrollmentDate": "2024-04-10", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP017", "courseId": "COURSE010", "enrollmentDate": "2024-06-01", "completionDate": null, "status": "Not Started", "score": null, "feedback": null},
+                {"employeeId": "EMP018", "courseId": "COURSE003", "enrollmentDate": "2024-02-05", "completionDate": "2024-04-15", "status": "Completed", "score": 93, "feedback": "Excellent cloud data engineering skills"},
+                {"employeeId": "EMP018", "courseId": "COURSE009", "enrollmentDate": "2024-01-15", "completionDate": "2024-03-01", "status": "Completed", "score": 95, "feedback": "Outstanding database optimization expertise"},
+                {"employeeId": "EMP018", "courseId": "COURSE011", "enrollmentDate": "2024-05-10", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP019", "courseId": "COURSE001", "enrollmentDate": "2024-01-05", "completionDate": "2024-02-10", "status": "Completed", "score": 99, "feedback": "Exceptional architectural-level Python skills"},
+                {"employeeId": "EMP019", "courseId": "COURSE002", "enrollmentDate": "2024-02-20", "completionDate": "2024-04-25", "status": "Completed", "score": 98, "feedback": "Master architect of microservices"},
+                {"employeeId": "EMP019", "courseId": "COURSE009", "enrollmentDate": "2024-05-01", "completionDate": "2024-06-15", "status": "Completed", "score": 97, "feedback": "Expert database architect"},
+                {"employeeId": "EMP019", "courseId": "COURSE011", "enrollmentDate": "2024-07-01", "completionDate": null, "status": "In Progress", "score": null, "feedback": null},
+                {"employeeId": "EMP020", "courseId": "COURSE003", "enrollmentDate": "2024-01-20", "completionDate": "2024-03-15", "status": "Completed", "score": 94, "feedback": "Strong cloud security implementation"},
+                {"employeeId": "EMP020", "courseId": "COURSE007", "enrollmentDate": "2024-04-01", "completionDate": "2024-06-10", "status": "Completed", "score": 92, "feedback": "Excellent security-focused DevOps"},
+                {"employeeId": "EMP020", "courseId": "COURSE010", "enrollmentDate": "2024-02-10", "completionDate": "2024-03-05", "status": "Completed", "score": 98, "feedback": "Outstanding cybersecurity expertise"},
+                {"employeeId": "EMP020", "courseId": "COURSE011", "enrollmentDate": "2024-07-15", "completionDate": null, "status": "Not Started", "score": null, "feedback": null}
+            ]
+        };
+
+        function dashboardApp() {
+            return {
+                activeTab: 'grid',
+                searchTerm: '',
+                filterBy: 'all',
+                statusFilter: 'all',
+                showCourseDetail: false,
+                selectedCourse: null,
+                showEmployeeDetail: false,
+                selectedEmployee: null,
+                manager: {},
+                teamMembers: [],
+                courses: [],
+                employeeCourses: [],
+                
+                async init() {
+                    await this.loadData();
+                },
+                
+                async loadData() {
+                    try {
+                        console.log('Loading embedded data...');
+                        // Use embedded data to avoid CORS issues with local files
+                        this.manager = MANAGER_DATA.manager;
+                        this.teamMembers = MANAGER_DATA.teamMembers;
+                        this.courses = COURSES_DATA.courses;
+                        this.employeeCourses = COURSES_DATA.employeeCourses;
+                        
+                        console.log('Data loaded successfully:');
+                        console.log('Team members count:', this.teamMembers.length);
+                        console.log('Courses count:', this.courses.length);
+                        console.log('Employee courses count:', this.employeeCourses.length);
+                    } catch (error) {
+                        console.error('Error loading data:', error);
+                        console.log('Using fallback data instead');
+                        // Fallback data for demo
+                        this.initFallbackData();
+                    }
+                },
+                
+                initFallbackData() {
+                    this.manager = {
+                        name: "Sarah Johnson",
+                        designation: "Engineering Manager",
+                        profilePicture: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+                    };
+                    this.teamMembers = [
+                        { id: "EMP001", name: "John Doe", designation: "Software Engineer - L2", profilePicture: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face", isDirect: true },
+                        { id: "EMP002", name: "Emily Chen", designation: "Software Engineer - L1", profilePicture: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face", isDirect: true }
+                    ];
+                    this.courses = [
+                        { id: "COURSE001", name: "Advanced Python Development", description: "Master advanced Python concepts", level: "Advanced", duration: "40 hours", type: "Self-paced" }
+                    ];
+                    this.employeeCourses = [
+                        { employeeId: "EMP001", courseId: "COURSE001", status: "Completed", score: 92, enrollmentDate: "2024-01-15" }
+                    ];
+                },
+                
+                get filteredCourses() {
+                    return this.courses.filter(course => {
+                        const matchesSearch = this.searchTerm === '' || 
+                            course.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                            course.description.toLowerCase().includes(this.searchTerm.toLowerCase());
+                        return matchesSearch;
+                    });
+                },
+                
+                get filteredTeamMembers() {
+                    return this.teamMembers.filter(member => {
+                        const matchesFilter = this.filterBy === 'all' || 
+                            (this.filterBy === 'direct' && member.isDirect) ||
+                            (this.filterBy === 'indirect' && !member.isDirect);
+                        const matchesSearch = this.searchTerm === '' || 
+                            member.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+                        return matchesFilter && matchesSearch;
+                    });
+                },
+                
+                get completionRate() {
+                    const total = this.employeeCourses.length;
+                    const completed = this.employeeCourses.filter(ec => ec.status === 'Completed').length;
+                    return total > 0 ? (completed / total) * 100 : 0;
+                },
+                
+                get completedCourses() {
+                    return this.employeeCourses.filter(ec => ec.status === 'Completed').length;
+                },
+
+                get notStartedCourses() {
+                    return this.employeeCourses.filter(ec => ec.status === 'Not Started').length;
+                },
+
+                get inProgressCourses() {
+                    return this.employeeCourses.filter(ec => ec.status === 'In Progress').length;
+                },
+                
+                getEmployee(employeeId) {
+                    return this.teamMembers.find(member => member.id === employeeId);
+                },
+                
+                getCourseEnrollments(courseId) {
+                    const enrollments = this.employeeCourses.filter(ec => ec.courseId === courseId);
+                    if (this.statusFilter !== 'all') {
+                        return enrollments.filter(ec => ec.status === this.statusFilter);
+                    }
+                    return enrollments;
+                },
+                
+                getEnrolledCount(courseId) {
+                    return this.employeeCourses.filter(ec => ec.courseId === courseId).length;
+                },
+
+                getCourseStatusCounts(courseId) {
+                    const enrollments = this.employeeCourses.filter(ec => ec.courseId === courseId);
+                    return {
+                        notStarted: enrollments.filter(ec => ec.status === 'Not Started').length,
+                        inProgress: enrollments.filter(ec => ec.status === 'In Progress').length,
+                        completed: enrollments.filter(ec => ec.status === 'Completed').length
+                    };
+                },
+                
+                getProgress(enrollment) {
+                    switch(enrollment.status) {
+                        case 'Completed': return 100;
+                        case 'In Progress': return 65;
+                        case 'Not Started': return 0;
+                        default: return 0;
+                    }
+                },
+                
+                getStatusColor(status) {
+                    switch(status) {
+                        case 'Completed': return 'bg-green-100 text-green-800';
+                        case 'In Progress': return 'bg-yellow-100 text-yellow-800';
+                        case 'Not Started': return 'bg-gray-100 text-gray-800';
+                        default: return 'bg-gray-100 text-gray-800';
+                    }
+                },
+                
+                getProgressColor(status) {
+                    switch(status) {
+                        case 'Completed': return 'bg-green-500';
+                        case 'In Progress': return 'bg-yellow-500';
+                        case 'Not Started': return 'bg-gray-300';
+                        default: return 'bg-gray-300';
+                    }
+                },
+
+                // New methods for Org View functionality
+                getEmployeeCourseStats(employeeId) {
+                    const employeeCourses = this.employeeCourses.filter(ec => ec.employeeId === employeeId);
+                    const stats = {
+                        total: employeeCourses.length,
+                        notStarted: employeeCourses.filter(ec => ec.status === 'Not Started').length,
+                        inProgress: employeeCourses.filter(ec => ec.status === 'In Progress').length,
+                        completed: employeeCourses.filter(ec => ec.status === 'Completed').length
+                    };
+                    return stats;
+                },
+
+                getEmployeeCoursesByStatus(employeeId, status) {
+                    const employeeCourses = this.employeeCourses.filter(ec => ec.employeeId === employeeId && ec.status === status);
+                    return employeeCourses.map(ec => {
+                        return this.courses.find(course => course.id === ec.courseId);
+                    }).filter(course => course !== undefined);
+                },
+
+                getEmployeeCoursesWithEnrollment(employeeId, status) {
+                    const employeeCourses = this.employeeCourses.filter(ec => ec.employeeId === employeeId && ec.status === status);
+                    return employeeCourses.map(ec => {
+                        const course = this.courses.find(course => course.id === ec.courseId);
+                        return course ? { course, enrollment: ec } : null;
+                    }).filter(item => item !== null);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

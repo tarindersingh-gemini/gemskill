@@ -1,0 +1,80 @@
+{
+  "developmentPlan": {
+    "id": "DP_001",
+    "employeeId": "EMP001",
+    "startDate": "2024-08-01",
+    "endDate": "2024-12-31",
+    "status": "Active",
+    "progress": "In Progress",
+    "summary": {
+      "totalSkills": 3,
+      "completedSkills": 0,
+      "inProgressSkills": 2,
+      "notStartedSkills": 1
+    },
+    "skills": [
+      {
+        "skillId": "microservices_basic",
+        "skillName": "Microservices Architecture",
+        "currentLevel": 2,
+        "targetLevel": 3,
+        "startDate": "2024-08-01",
+        "endDate": "2024-10-31",
+        "status": "Active",
+        "progress": "In Progress",
+        "assignedBy": "MGR001",
+        "courseLink": "https://athena.company.com/microservices-101"
+      },
+      {
+        "skillId": "design_patterns_basic",
+        "skillName": "Design Patterns",
+        "currentLevel": 2,
+        "targetLevel": 3,
+        "startDate": "2024-09-01",
+        "endDate": "2024-11-30",
+        "status": "Active",
+        "progress": "In Progress",
+        "assignedBy": "MGR001",
+        "courseLink": "https://athena.company.com/design-patterns"
+      },
+      {
+        "skillId": "cloud_advanced",
+        "skillName": "Cloud Technologies",
+        "currentLevel": 3,
+        "targetLevel": 4,
+        "startDate": "2024-11-01",
+        "endDate": "2024-12-31",
+        "status": "Active",
+        "progress": "Not Started",
+        "assignedBy": "MGR001",
+        "courseLink": "https://athena.company.com/cloud-advanced"
+      }
+    ],
+    "activities": [
+      {
+        "id": "ACT_001",
+        "name": "Microservices Workshop",
+        "description": "Hands-on workshop on building microservices with Docker and Kubernetes",
+        "scheduledDate": "2024-09-15",
+        "status": "In Progress",
+        "assignedBy": "MGR001"
+      },
+      {
+        "id": "ACT_002", 
+        "name": "Design Patterns Study Group",
+        "description": "Weekly study group sessions on common design patterns",
+        "scheduledDate": "2024-09-20",
+        "status": "Not Started",
+        "assignedBy": "MGR001"
+      },
+      {
+        "id": "ACT_003",
+        "name": "AWS Certification Prep",
+        "description": "Preparation course for AWS Solutions Architect certification",
+        "scheduledDate": "2024-11-01",
+        "status": "Not Started",
+        "assignedBy": "MGR001"
+      }
+    ]
+  }
+}

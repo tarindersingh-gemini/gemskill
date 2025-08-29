@@ -1,0 +1,204 @@
+{
+  "courses": [
+    {
+      "id": "COURSE001",
+      "name": "Advanced Python Development",
+      "description": "Master advanced Python concepts including metaclasses, decorators, and performance optimization",
+      "duration": "40 hours",
+      "level": "Advanced",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Understand advanced Python concepts",
+        "Implement design patterns in Python",
+        "Optimize Python code for performance",
+        "Master Python testing frameworks"
+      ],
+      "prerequisites": ["Python Fundamentals", "Object-Oriented Programming"],
+      "targetAudience": "Mid to Senior Software Engineers",
+      "assessmentMethod": "Project-based assessment",
+      "certificationDetails": "Advanced Python Developer Certificate"
+    },
+    {
+      "id": "COURSE002",
+      "name": "Microservices Architecture",
+      "description": "Learn to design, build, and deploy scalable microservices using modern patterns",
+      "duration": "35 hours",
+      "level": "Intermediate",
+      "type": "Instructor-led",
+      "learningObjectives": [
+        "Design microservices architecture",
+        "Implement service communication patterns",
+        "Handle distributed system challenges",
+        "Deploy microservices using containers"
+      ],
+      "prerequisites": ["REST APIs", "Docker Basics"],
+      "targetAudience": "Software Engineers and Architects",
+      "assessmentMethod": "Hands-on project",
+      "certificationDetails": "Microservices Architecture Certificate"
+    },
+    {
+      "id": "COURSE003",
+      "name": "Cloud Infrastructure with AWS",
+      "description": "Comprehensive course on AWS cloud services and infrastructure management",
+      "duration": "50 hours",
+      "level": "Intermediate",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Deploy applications on AWS",
+        "Manage cloud infrastructure",
+        "Implement security best practices",
+        "Monitor and optimize costs"
+      ],
+      "prerequisites": ["Basic Cloud Concepts"],
+      "targetAudience": "DevOps Engineers and Software Engineers",
+      "assessmentMethod": "AWS certification exam",
+      "certificationDetails": "AWS Solutions Architect Associate"
+    },
+    {
+      "id": "COURSE004",
+      "name": "Design Patterns in Software Engineering",
+      "description": "Learn and apply common design patterns for maintainable software architecture",
+      "duration": "25 hours",
+      "level": "Intermediate",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Understand Gang of Four patterns",
+        "Apply patterns in real-world scenarios",
+        "Improve code maintainability",
+        "Make better architectural decisions"
+      ],
+      "prerequisites": ["Object-Oriented Programming"],
+      "targetAudience": "Software Engineers",
+      "assessmentMethod": "Code review and quiz",
+      "certificationDetails": "Software Design Patterns Certificate"
+    },
+    {
+      "id": "COURSE005",
+      "name": "Leadership and Communication",
+      "description": "Develop essential leadership skills and effective communication techniques",
+      "duration": "30 hours",
+      "level": "Beginner",
+      "type": "Instructor-led",
+      "learningObjectives": [
+        "Develop leadership skills",
+        "Improve communication techniques",
+        "Learn conflict resolution",
+        "Build high-performing teams"
+      ],
+      "prerequisites": [],
+      "targetAudience": "All team members",
+      "assessmentMethod": "Peer feedback and presentation",
+      "certificationDetails": "Leadership Excellence Certificate"
+    },
+    {
+      "id": "COURSE006",
+      "name": "Agile Project Management",
+      "description": "Master Agile methodologies and project management best practices",
+      "duration": "20 hours",
+      "level": "Beginner",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Understand Agile principles",
+        "Implement Scrum framework",
+        "Manage project timelines",
+        "Facilitate team ceremonies"
+      ],
+      "prerequisites": [],
+      "targetAudience": "Project Managers and Team Leads",
+      "assessmentMethod": "Scrum simulation exercise",
+      "certificationDetails": "Certified Scrum Master"
+    }
+  ],
+  "employeeCourses": [
+    {
+      "employeeId": "EMP001",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-01-15",
+      "completionDate": "2024-03-20",
+      "status": "Completed",
+      "score": 92,
+      "feedback": "Excellent understanding of advanced concepts"
+    },
+    {
+      "employeeId": "EMP001",
+      "courseId": "COURSE002",
+      "enrollmentDate": "2024-04-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP001",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-02-10",
+      "completionDate": "2024-02-28",
+      "status": "Completed",
+      "score": 88,
+      "feedback": "Good progress in leadership skills"
+    },
+    {
+      "employeeId": "EMP002",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-03-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP002",
+      "courseId": "COURSE004",
+      "enrollmentDate": "2024-01-20",
+      "completionDate": "2024-03-15",
+      "status": "Completed",
+      "score": 85,
+      "feedback": "Good grasp of design patterns"
+    },
+    {
+      "employeeId": "EMP002",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-04-15",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP003",
+      "courseId": "COURSE003",
+      "enrollmentDate": "2024-02-01",
+      "completionDate": "2024-04-10",
+      "status": "Completed",
+      "score": 78,
+      "feedback": "Solid understanding of AWS fundamentals"
+    },
+    {
+      "employeeId": "EMP003",
+      "courseId": "COURSE006",
+      "enrollmentDate": "2024-04-20",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP004",
+      "courseId": "COURSE002",
+      "enrollmentDate": "2024-03-10",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP004",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-01-25",
+      "completionDate": "2024-03-05",
+      "status": "Completed",
+      "score": 90,
+      "feedback": "Excellent leadership potential"
+    }
+  ]
+}

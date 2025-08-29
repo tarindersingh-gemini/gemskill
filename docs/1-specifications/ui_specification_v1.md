@@ -94,3 +94,7 @@ The Manager interface should provide tools for overseeing their team members' sk
 - **Create Development Plan Button**: Allows managers to create a skill development plan for a team member.
 - **Rate Skill For Team Member Button**: Enables managers to rate a specific skill for a selected team member.
 - **Track Progress Button**: Enables managers to track the progress of a team member's skill development plan. Add a tree view of the development plan with progress indicators.
+
+
+## Tab 3: skill Development Plan
+ - 

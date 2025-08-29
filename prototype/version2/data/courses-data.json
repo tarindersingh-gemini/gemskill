@@ -1,0 +1,834 @@
+{
+  "courses": [
+    {
+      "id": "COURSE001",
+      "name": "Advanced Python Development",
+      "description": "Master advanced Python concepts including metaclasses, decorators, and performance optimization",
+      "duration": "40 hours",
+      "level": "Advanced",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Understand advanced Python concepts",
+        "Implement design patterns in Python",
+        "Optimize Python code for performance",
+        "Master Python testing frameworks"
+      ],
+      "prerequisites": ["Python Fundamentals", "Object-Oriented Programming"],
+      "targetAudience": "Mid to Senior Software Engineers",
+      "assessmentMethod": "Project-based assessment",
+      "certificationDetails": "Advanced Python Developer Certificate"
+    },
+    {
+      "id": "COURSE002",
+      "name": "Microservices Architecture",
+      "description": "Learn to design, build, and deploy scalable microservices using modern patterns",
+      "duration": "35 hours",
+      "level": "Intermediate",
+      "type": "Instructor-led",
+      "learningObjectives": [
+        "Design microservices architecture",
+        "Implement service communication patterns",
+        "Handle distributed system challenges",
+        "Deploy microservices using containers"
+      ],
+      "prerequisites": ["REST APIs", "Docker Basics"],
+      "targetAudience": "Software Engineers and Architects",
+      "assessmentMethod": "Hands-on project",
+      "certificationDetails": "Microservices Architecture Certificate"
+    },
+    {
+      "id": "COURSE003",
+      "name": "Cloud Infrastructure with AWS",
+      "description": "Comprehensive course on AWS cloud services and infrastructure management",
+      "duration": "50 hours",
+      "level": "Intermediate",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Deploy applications on AWS",
+        "Manage cloud infrastructure",
+        "Implement security best practices",
+        "Monitor and optimize costs"
+      ],
+      "prerequisites": ["Basic Cloud Concepts"],
+      "targetAudience": "DevOps Engineers and Software Engineers",
+      "assessmentMethod": "AWS certification exam",
+      "certificationDetails": "AWS Solutions Architect Associate"
+    },
+    {
+      "id": "COURSE004",
+      "name": "Design Patterns in Software Engineering",
+      "description": "Learn and apply common design patterns for maintainable software architecture",
+      "duration": "25 hours",
+      "level": "Intermediate",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Understand Gang of Four patterns",
+        "Apply patterns in real-world scenarios",
+        "Improve code maintainability",
+        "Make better architectural decisions"
+      ],
+      "prerequisites": ["Object-Oriented Programming"],
+      "targetAudience": "Software Engineers",
+      "assessmentMethod": "Code review and quiz",
+      "certificationDetails": "Software Design Patterns Certificate"
+    },
+    {
+      "id": "COURSE005",
+      "name": "Leadership and Communication",
+      "description": "Develop essential leadership skills and effective communication techniques",
+      "duration": "30 hours",
+      "level": "Beginner",
+      "type": "Instructor-led",
+      "learningObjectives": [
+        "Develop leadership skills",
+        "Improve communication techniques",
+        "Learn conflict resolution",
+        "Build high-performing teams"
+      ],
+      "prerequisites": [],
+      "targetAudience": "All team members",
+      "assessmentMethod": "Peer feedback and presentation",
+      "certificationDetails": "Leadership Excellence Certificate"
+    },
+    {
+      "id": "COURSE006",
+      "name": "Agile Project Management",
+      "description": "Master Agile methodologies and project management best practices",
+      "duration": "20 hours",
+      "level": "Beginner",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Understand Agile principles",
+        "Implement Scrum framework",
+        "Manage project timelines",
+        "Facilitate team ceremonies"
+      ],
+      "prerequisites": [],
+      "targetAudience": "Project Managers and Team Leads",
+      "assessmentMethod": "Scrum simulation exercise",
+      "certificationDetails": "Certified Scrum Master"
+    },
+    {
+      "id": "COURSE007",
+      "name": "DevOps and CI/CD Pipelines",
+      "description": "Learn modern DevOps practices and continuous integration/deployment strategies",
+      "duration": "45 hours",
+      "level": "Intermediate",
+      "type": "Instructor-led",
+      "learningObjectives": [
+        "Implement CI/CD pipelines",
+        "Master containerization with Docker",
+        "Deploy using Kubernetes",
+        "Monitor and maintain systems"
+      ],
+      "prerequisites": ["Linux Basics", "Version Control"],
+      "targetAudience": "DevOps Engineers and Backend Developers",
+      "assessmentMethod": "Pipeline implementation project",
+      "certificationDetails": "DevOps Professional Certificate"
+    },
+    {
+      "id": "COURSE008",
+      "name": "React.js Frontend Development",
+      "description": "Build modern, responsive web applications using React.js ecosystem",
+      "duration": "35 hours",
+      "level": "Intermediate",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Master React components and hooks",
+        "Implement state management with Redux",
+        "Build responsive user interfaces",
+        "Optimize performance and testing"
+      ],
+      "prerequisites": ["JavaScript Fundamentals", "HTML/CSS"],
+      "targetAudience": "Frontend Developers",
+      "assessmentMethod": "Full-stack application project",
+      "certificationDetails": "React.js Developer Certificate"
+    },
+    {
+      "id": "COURSE009",
+      "name": "Database Design and Optimization",
+      "description": "Advanced database concepts, optimization techniques, and performance tuning",
+      "duration": "30 hours",
+      "level": "Advanced",
+      "type": "Instructor-led",
+      "learningObjectives": [
+        "Design efficient database schemas",
+        "Optimize query performance",
+        "Implement database security",
+        "Handle large-scale data operations"
+      ],
+      "prerequisites": ["SQL Fundamentals"],
+      "targetAudience": "Backend Developers and Data Engineers",
+      "assessmentMethod": "Database optimization project",
+      "certificationDetails": "Database Specialist Certificate"
+    },
+    {
+      "id": "COURSE010",
+      "name": "Cybersecurity Fundamentals",
+      "description": "Essential cybersecurity principles and best practices for software development",
+      "duration": "25 hours",
+      "level": "Beginner",
+      "type": "Self-paced",
+      "learningObjectives": [
+        "Understand security threats and vulnerabilities",
+        "Implement secure coding practices",
+        "Perform security testing",
+        "Handle incident response"
+      ],
+      "prerequisites": [],
+      "targetAudience": "All developers and engineers",
+      "assessmentMethod": "Security assessment and quiz",
+      "certificationDetails": "Cybersecurity Awareness Certificate"
+    },
+    {
+      "id": "COURSE011",
+      "name": "Machine Learning for Developers",
+      "description": "Introduction to machine learning concepts and practical implementation",
+      "duration": "55 hours",
+      "level": "Advanced",
+      "type": "Instructor-led",
+      "learningObjectives": [
+        "Understand ML algorithms and models",
+        "Implement data preprocessing pipelines",
+        "Deploy ML models in production",
+        "Evaluate model performance"
+      ],
+      "prerequisites": ["Python Programming", "Statistics Basics"],
+      "targetAudience": "Software Engineers and Data Scientists",
+      "assessmentMethod": "ML project implementation",
+      "certificationDetails": "Machine Learning Practitioner Certificate"
+    }
+  ],
+  "employeeCourses": [
+    {
+      "employeeId": "EMP001",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-01-15",
+      "completionDate": "2024-03-20",
+      "status": "Completed",
+      "score": 92,
+      "feedback": "Excellent understanding of advanced concepts"
+    },
+    {
+      "employeeId": "EMP001",
+      "courseId": "COURSE002",
+      "enrollmentDate": "2024-04-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP001",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-02-10",
+      "completionDate": "2024-02-28",
+      "status": "Completed",
+      "score": 88,
+      "feedback": "Good progress in leadership skills"
+    },
+    {
+      "employeeId": "EMP001",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-06-01",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP002",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-03-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP002",
+      "courseId": "COURSE004",
+      "enrollmentDate": "2024-01-20",
+      "completionDate": "2024-03-15",
+      "status": "Completed",
+      "score": 85,
+      "feedback": "Good grasp of design patterns"
+    },
+    {
+      "employeeId": "EMP002",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-04-15",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP002",
+      "courseId": "COURSE008",
+      "enrollmentDate": "2024-05-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP003",
+      "courseId": "COURSE003",
+      "enrollmentDate": "2024-02-01",
+      "completionDate": "2024-04-10",
+      "status": "Completed",
+      "score": 95,
+      "feedback": "Excellent mastery of AWS fundamentals"
+    },
+    {
+      "employeeId": "EMP003",
+      "courseId": "COURSE006",
+      "enrollmentDate": "2024-04-20",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP003",
+      "courseId": "COURSE009",
+      "enrollmentDate": "2024-01-10",
+      "completionDate": "2024-02-25",
+      "status": "Completed",
+      "score": 91,
+      "feedback": "Strong database optimization skills"
+    },
+    {
+      "employeeId": "EMP003",
+      "courseId": "COURSE011",
+      "enrollmentDate": "2024-06-15",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP004",
+      "courseId": "COURSE002",
+      "enrollmentDate": "2024-03-10",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP004",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-01-25",
+      "completionDate": "2024-03-05",
+      "status": "Completed",
+      "score": 90,
+      "feedback": "Excellent leadership potential"
+    },
+    {
+      "employeeId": "EMP004",
+      "courseId": "COURSE007",
+      "enrollmentDate": "2024-05-15",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP004",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-02-01",
+      "completionDate": "2024-02-20",
+      "status": "Completed",
+      "score": 87,
+      "feedback": "Good understanding of security principles"
+    },
+    {
+      "employeeId": "EMP005",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-01-05",
+      "completionDate": "2024-02-15",
+      "status": "Completed",
+      "score": 98,
+      "feedback": "Outstanding performance, mentor potential"
+    },
+    {
+      "employeeId": "EMP005",
+      "courseId": "COURSE006",
+      "enrollmentDate": "2024-03-01",
+      "completionDate": "2024-03-20",
+      "status": "Completed",
+      "score": 94,
+      "feedback": "Natural leadership abilities"
+    },
+    {
+      "employeeId": "EMP005",
+      "courseId": "COURSE009",
+      "enrollmentDate": "2024-04-01",
+      "completionDate": "2024-05-10",
+      "status": "Completed",
+      "score": 96,
+      "feedback": "Expert-level database skills"
+    },
+    {
+      "employeeId": "EMP005",
+      "courseId": "COURSE011",
+      "enrollmentDate": "2024-06-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP006",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-04-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP006",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-02-15",
+      "completionDate": "2024-03-10",
+      "status": "Completed",
+      "score": 82,
+      "feedback": "Improved communication skills significantly"
+    },
+    {
+      "employeeId": "EMP006",
+      "courseId": "COURSE008",
+      "enrollmentDate": "2024-05-20",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP006",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-03-15",
+      "completionDate": "2024-04-05",
+      "status": "Completed",
+      "score": 79,
+      "feedback": "Basic security awareness achieved"
+    },
+    {
+      "employeeId": "EMP007",
+      "courseId": "COURSE002",
+      "enrollmentDate": "2024-02-10",
+      "completionDate": "2024-04-15",
+      "status": "Completed",
+      "score": 93,
+      "feedback": "Strong architectural thinking"
+    },
+    {
+      "employeeId": "EMP007",
+      "courseId": "COURSE003",
+      "enrollmentDate": "2024-05-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP007",
+      "courseId": "COURSE006",
+      "enrollmentDate": "2024-01-15",
+      "completionDate": "2024-02-05",
+      "status": "Completed",
+      "score": 89,
+      "feedback": "Good project management skills"
+    },
+    {
+      "employeeId": "EMP007",
+      "courseId": "COURSE009",
+      "enrollmentDate": "2024-06-10",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP008",
+      "courseId": "COURSE008",
+      "enrollmentDate": "2024-01-20",
+      "completionDate": "2024-03-25",
+      "status": "Completed",
+      "score": 91,
+      "feedback": "Excellent frontend development skills"
+    },
+    {
+      "employeeId": "EMP008",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-04-10",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP008",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-05-15",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP009",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-02-01",
+      "completionDate": "2024-04-05",
+      "status": "Completed",
+      "score": 88,
+      "feedback": "Solid Python skills improvement"
+    },
+    {
+      "employeeId": "EMP009",
+      "courseId": "COURSE002",
+      "enrollmentDate": "2024-05-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP009",
+      "courseId": "COURSE009",
+      "enrollmentDate": "2024-03-15",
+      "completionDate": "2024-05-20",
+      "status": "Completed",
+      "score": 85,
+      "feedback": "Good database understanding"
+    },
+    {
+      "employeeId": "EMP010",
+      "courseId": "COURSE004",
+      "enrollmentDate": "2024-03-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP010",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-01-10",
+      "completionDate": "2024-02-15",
+      "status": "Completed",
+      "score": 86,
+      "feedback": "Strong communication and testing skills"
+    },
+    {
+      "employeeId": "EMP010",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-04-20",
+      "completionDate": "2024-05-10",
+      "status": "Completed",
+      "score": 92,
+      "feedback": "Excellent security awareness for QA"
+    },
+    {
+      "employeeId": "EMP011",
+      "courseId": "COURSE003",
+      "enrollmentDate": "2024-01-15",
+      "completionDate": "2024-02-28",
+      "status": "Completed",
+      "score": 97,
+      "feedback": "Outstanding cloud infrastructure knowledge"
+    },
+    {
+      "employeeId": "EMP011",
+      "courseId": "COURSE007",
+      "enrollmentDate": "2024-03-10",
+      "completionDate": "2024-05-15",
+      "status": "Completed",
+      "score": 95,
+      "feedback": "Master of DevOps practices"
+    },
+    {
+      "employeeId": "EMP011",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-06-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP012",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-03-15",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP012",
+      "courseId": "COURSE008",
+      "enrollmentDate": "2024-02-01",
+      "completionDate": "2024-04-10",
+      "status": "Completed",
+      "score": 87,
+      "feedback": "Good frontend development progress"
+    },
+    {
+      "employeeId": "EMP012",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-05-01",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP013",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-01-25",
+      "completionDate": "2024-03-30",
+      "status": "Completed",
+      "score": 94,
+      "feedback": "Excellent full-stack skills"
+    },
+    {
+      "employeeId": "EMP013",
+      "courseId": "COURSE008",
+      "enrollmentDate": "2024-04-15",
+      "completionDate": "2024-06-20",
+      "status": "Completed",
+      "score": 93,
+      "feedback": "Strong React.js implementation"
+    },
+    {
+      "employeeId": "EMP013",
+      "courseId": "COURSE009",
+      "enrollmentDate": "2024-07-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP014",
+      "courseId": "COURSE008",
+      "enrollmentDate": "2024-02-15",
+      "completionDate": "2024-04-25",
+      "status": "Completed",
+      "score": 89,
+      "feedback": "Great UI/UX integration with React"
+    },
+    {
+      "employeeId": "EMP014",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-05-10",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP014",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-06-15",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP015",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-01-10",
+      "completionDate": "2024-02-20",
+      "status": "Completed",
+      "score": 97,
+      "feedback": "Master-level Python expertise"
+    },
+    {
+      "employeeId": "EMP015",
+      "courseId": "COURSE002",
+      "enrollmentDate": "2024-03-05",
+      "completionDate": "2024-05-10",
+      "status": "Completed",
+      "score": 96,
+      "feedback": "Expert microservices architect"
+    },
+    {
+      "employeeId": "EMP015",
+      "courseId": "COURSE009",
+      "enrollmentDate": "2024-06-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP015",
+      "courseId": "COURSE011",
+      "enrollmentDate": "2024-07-15",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP016",
+      "courseId": "COURSE004",
+      "enrollmentDate": "2024-02-20",
+      "completionDate": "2024-04-15",
+      "status": "Completed",
+      "score": 84,
+      "feedback": "Good understanding of design patterns"
+    },
+    {
+      "employeeId": "EMP016",
+      "courseId": "COURSE005",
+      "enrollmentDate": "2024-05-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP016",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-03-10",
+      "completionDate": "2024-04-05",
+      "status": "Completed",
+      "score": 88,
+      "feedback": "Strong security awareness"
+    },
+    {
+      "employeeId": "EMP017",
+      "courseId": "COURSE004",
+      "enrollmentDate": "2024-01-30",
+      "completionDate": "2024-03-20",
+      "status": "Completed",
+      "score": 86,
+      "feedback": "Good mobile design patterns application"
+    },
+    {
+      "employeeId": "EMP017",
+      "courseId": "COURSE008",
+      "enrollmentDate": "2024-04-10",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP017",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-06-01",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP018",
+      "courseId": "COURSE003",
+      "enrollmentDate": "2024-02-05",
+      "completionDate": "2024-04-15",
+      "status": "Completed",
+      "score": 93,
+      "feedback": "Excellent cloud data engineering skills"
+    },
+    {
+      "employeeId": "EMP018",
+      "courseId": "COURSE009",
+      "enrollmentDate": "2024-01-15",
+      "completionDate": "2024-03-01",
+      "status": "Completed",
+      "score": 95,
+      "feedback": "Outstanding database optimization expertise"
+    },
+    {
+      "employeeId": "EMP018",
+      "courseId": "COURSE011",
+      "enrollmentDate": "2024-05-10",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP019",
+      "courseId": "COURSE001",
+      "enrollmentDate": "2024-01-05",
+      "completionDate": "2024-02-10",
+      "status": "Completed",
+      "score": 99,
+      "feedback": "Exceptional architectural-level Python skills"
+    },
+    {
+      "employeeId": "EMP019",
+      "courseId": "COURSE002",
+      "enrollmentDate": "2024-02-20",
+      "completionDate": "2024-04-25",
+      "status": "Completed",
+      "score": 98,
+      "feedback": "Master architect of microservices"
+    },
+    {
+      "employeeId": "EMP019",
+      "courseId": "COURSE009",
+      "enrollmentDate": "2024-05-01",
+      "completionDate": "2024-06-15",
+      "status": "Completed",
+      "score": 97,
+      "feedback": "Expert database architect"
+    },
+    {
+      "employeeId": "EMP019",
+      "courseId": "COURSE011",
+      "enrollmentDate": "2024-07-01",
+      "completionDate": null,
+      "status": "In Progress",
+      "score": null,
+      "feedback": null
+    },
+    {
+      "employeeId": "EMP020",
+      "courseId": "COURSE003",
+      "enrollmentDate": "2024-01-20",
+      "completionDate": "2024-03-15",
+      "status": "Completed",
+      "score": 94,
+      "feedback": "Strong cloud security implementation"
+    },
+    {
+      "employeeId": "EMP020",
+      "courseId": "COURSE007",
+      "enrollmentDate": "2024-04-01",
+      "completionDate": "2024-06-10",
+      "status": "Completed",
+      "score": 92,
+      "feedback": "Excellent security-focused DevOps"
+    },
+    {
+      "employeeId": "EMP020",
+      "courseId": "COURSE010",
+      "enrollmentDate": "2024-02-10",
+      "completionDate": "2024-03-05",
+      "status": "Completed",
+      "score": 98,
+      "feedback": "Outstanding cybersecurity expertise"
+    },
+    {
+      "employeeId": "EMP020",
+      "courseId": "COURSE011",
+      "enrollmentDate": "2024-07-15",
+      "completionDate": null,
+      "status": "Not Started",
+      "score": null,
+      "feedback": null
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "employee": {
+    "id": "EMP001",
+    "name": "John Doe",
+    "email": "john.doe@company.com",
+    "phone": "+1-555-0123",
+    "designation": "Software Engineer - L2",
+    "department": "Engineering",
+    "location": "San Francisco, CA",
+    "profilePicture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    "education": [
+      {
+        "degree": "Bachelor of Science in Computer Science",
+        "institution": "University of California, Berkeley",
+        "year": "2019"
+      }
+    ],
+    "experience": [
+      {
+        "company": "TechCorp",
+        "position": "Software Engineer",
+        "duration": "2019 - Present",
+        "description": "Full-stack development using Python, JavaScript, and cloud technologies"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "AWS Certified Developer",
+        "issuer": "Amazon Web Services",
+        "date": "2023",
+        "verificationLink": "https://aws.amazon.com/verification"
+      },
+      {
+        "name": "Python Professional Certification",
+        "issuer": "Python Institute",
+        "date": "2022",
+        "verificationLink": "https://python.org/verification"
+      }
+    ]
+  },
+  "jobRole": {
+    "id": "JR_SE_L2_001",
+    "name": "Software Engineer - L2",
+    "description": "Responsible for designing, developing, and maintaining software applications with focus on quality and performance.",
+    "deliveryCouncil": "Engineering Excellence",
+    "subDeliveryCouncil": "Backend Development",
+    "designationTitle": "Software Engineer",
+    "level": "L2",
+    "location": "San Francisco, CA",
+    "employmentType": "Full-time",
+    "mandatorySkills": [
+      "python_advanced",
+      "oop_advanced", 
+      "rest_apis_advanced",
+      "debugging_proficient",
+      "git_proficient"
+    ],
+    "desiredSkills": [
+      "microservices_basic",
+      "design_patterns_basic",
+      "cloud_advanced"
+    ],
+    "keyResponsibilities": [
+      "Design and develop scalable software solutions",
+      "Write clean, maintainable, and well-tested code",
+      "Collaborate with cross-functional teams",
+      "Participate in code reviews and technical discussions",
+      "Mentor junior developers"
+    ],
+    "kpis": [
+      "Code Quality (Defect Rate < 2%)",
+      "Code Coverage (> 80%)",
+      "Sprint Velocity",
+      "Ticket Resolution Time"
+    ]
+  }
+}
