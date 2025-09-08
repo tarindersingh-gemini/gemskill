@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Athena - Manager Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #205072;
+            --secondary-color: #0f4c75;
+            --accent-color: #38a3a5;
+            --light-accent: #99dfdf;
+            --background-color: #eef0f2;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --success-color: #3e885b;
+            --warning-color: #ffa700;
+            --danger-color: #dc3545;
+            --in-progress-color: #0d89ec;
+            --completed-color: #3e885b;
+            --not-started-color: #6c757d;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            padding-bottom: 2rem;
+        }
+        
+        .navbar {
+            background-color: var(--secondary-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white;
+        }
+        
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0 !important;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
+        
+        .stat-card-blue {
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .stat-card-green {
+            border-top: 4px solid var(--accent-color);
+        }
+        
+        .stat-card-orange {
+            border-top: 4px solid #ffa700;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--light-accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+        
+        .profile-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .team-member-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .badge-completed {
+            background-color: var(--completed-color);
+            color: white;
+        }
+        
+        .badge-in-progress {
+            background-color: var(--in-progress-color);
+            color: white;
+        }
+        
+        .badge-not-started {
+            background-color: var(--not-started-color);
+            color: white;
+        }
+        
+        .team-table {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table-fixed-header {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .course-column {
+            min-width: 200px;
+            max-width: 250px;
+        }
+        
+        .team-info-column {
+            min-width: 250px;
+            max-width: 300px;
+        }
+        
+        .team-table-container {
+            overflow-x: auto;
+            padding: 1rem;
+        }
+        
+        .member-details {
+            display: flex;
+            align-items: center;
+        }
+        
+        .member-info {
+            margin-left: 10px;
+        }
+        
+        .member-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .member-designation {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        
+        .member-department {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+        
+        .course-status {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Sorting styles */
+        .sortable {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .sortable:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .sort-icon {
+            font-size: 0.8rem;
+            margin-left: 5px;
+            color: #999;
+        }
+        
+        .sorted-asc .sort-icon:after {
+            content: "↑";
+            color: var(--primary-color);
+        }
+        
+        .sorted-desc .sort-icon:after {
+            content: "↓";
+            color: var(--primary-color);
+        }
+        
+        /* Loading indicator */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Make table container position relative for overlay */
+        .team-table-container {
+            position: relative;
+        }
+        
+        /* Active filters indicator */
+        .filter-active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(32, 80, 114, 0.25);
+        }
+        
+        /* Filter count badge */
+        .filter-count {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* No results message */
+        .no-results {
+            display: none;
+            padding: 20px;
+            text-align: center;
+            font-style: italic;
+            color: var(--text-light);
+        }
+        
+        /* Freeze first column so it doesn't move during horizontal scrolling */
+        /* Header cell for first column */
+        .table-fixed-header th.team-info-column {
+            position: sticky; /* ensure header remains sticky vertically */
+            left: 0;           /* pin to the left edge */
+            z-index: 6;        /* above other header cells */
+            background-color: #f8f9fa; /* match header background */
+            border-right: 1px solid #e9ecef;
+        }
+
+        /* Body cells for first column */
+        .team-table tbody td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 4; /* below header but above row cells */
+            background-color: white; /* prevents underlying cells from showing through */
+            border-right: 1px solid #e9ecef;
+        }
+
+        /* Ensure the team-info-column th used elsewhere also stays pinned */
+        .team-info-column {
+            position: sticky;
+            left: 0;
+            background-color: white;
+            z-index: 5;
+            border-right: 1px solid #e9ecef;
+        }
+
+        /* Small visual separation shadow when table is scrolled */
+        .team-table-container.scrolled .team-table tbody td:first-child {
+            box-shadow: 2px 0 6px rgba(0,0,0,0.04);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://athena.geminisolutions.com/assets/images/Athena-logo.svg" height="30" alt="Athena Logo">
+                
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Manager View </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+                                 alt="Profile" class="profile-img mr-1">
+                            Sarah Johnson
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">My Profile</a>
+                            <a class="dropdown-item" href="#">Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Sign Out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <h2 class="mb-4">Manager Dashboard</h2>
+        
+        <!-- Stats Row -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-card stat-card-blue">
+                    <div class="stat-icon">
+                        <img src="https://athena.geminisolutions.com/assets/images/totalCoursesAdmin.svg" alt="Courses" height="24">
+                    </div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Assigned Courses</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card stat-card-green">
+                    <div class="stat-icon">
+                        <img src="https://athena.geminisolutions.com/assets/images/totalLearnersIcon.svg" alt="Team" height="24">
+                    </div>
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Team Members</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card stat-card-orange">
+                    <div class="stat-icon">
+                        <img src="https://athena.geminisolutions.com/assets/images/totalLearnersIcon.svg" alt="Completion" height="24">
+                    </div>
+                    <div class="stat-value">65%</div>
+                    <div class="stat-label">Course Completion Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Member Course Status Table -->
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Team Members Course Status</h5>
+            </div>
+            <div class="p-3 bg-light border-bottom">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <label for="courseFilter" class="small font-weight-bold mb-1">Filter by Course:</label>
+                        <select id="courseFilter" class="form-control form-control-sm">
+                            <option value="">All Courses</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label for="statusFilter" class="small font-weight-bold mb-1">Filter by Status:</label>
+                        <select id="statusFilter" class="form-control form-control-sm">
+                            <option value="">All Statuses</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label for="teamMemberFilter" class="small font-weight-bold mb-1">Filter by Team Member:</label>
+                        <select id="teamMemberFilter" class="form-control form-control-sm">
+                            <option value="">All Team Members</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="small font-weight-bold mb-1">&nbsp;</label>
+                        <button id="resetFilters" class="btn btn-outline-secondary btn-sm form-control">Reset All Filters</button>
+                    </div>
+                </div>
+            </div>
+            <div class="team-table-container">
+                <div class="loading-overlay">
+                    <div class="spinner"></div>
+                </div>
+                <div class="no-results">
+                    <p>No results found matching your filters. Try changing or resetting your filters.</p>
+                </div>
+                <table class="table table-hover team-table">
+                    <thead class="table-fixed-header">
+                        <tr>
+                            <th class="team-info-column sortable" data-sort="name">Team Member <span class="sort-icon">↕</span></th>
+                            <th class="course-column">Advanced Python</th>
+                            <th class="course-column">Microservices</th>
+                            <th class="course-column">Leadership Skills</th>
+                            <th class="course-column">Design Patterns</th>
+                            <th class="course-column">AWS Cloud</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Team Member 1 -->
+                        <tr>
+                            <td>
+                                <div class="member-details">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+                                         alt="John Doe" class="team-member-img">
+                                    <div class="member-info">
+                                        <div class="member-name">John Doe</div>
+                                        <div class="member-designation">Software Engineer - L2</div>
+                                        <div class="member-department">Engineering</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-completed">Completed</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-in-progress">In Progress</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-completed">Completed</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Team Member 2 -->
+                        <tr>
+                            <td>
+                                <div class="member-details">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" 
+                                         alt="Emily Chen" class="team-member-img">
+                                    <div class="member-info">
+                                        <div class="member-name">Emily Chen</div>
+                                        <div class="member-designation">Software Engineer - L1</div>
+                                        <div class="member-department">Engineering</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-in-progress">In Progress</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Started</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-completed">Completed</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Team Member 3 -->
+                        <tr>
+                            <td>
+                                <div class="member-details">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" 
+                                         alt="Michael Rodriguez" class="team-member-img">
+                                    <div class="member-info">
+                                        <div class="member-name">Michael Rodriguez</div>
+                                        <div class="member-designation">Senior Software Engineer - L1</div>
+                                        <div class="member-department">Engineering</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-completed">Completed</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Team Member 4 -->
+                        <tr>
+                            <td>
+                                <div class="member-details">
+                                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face" 
+                                         alt="Lisa Wang" class="team-member-img">
+                                    <div class="member-info">
+                                        <div class="member-name">Lisa Wang</div>
+                                        <div class="member-designation">Software Engineer - L2</div>
+                                        <div class="member-department">Engineering</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-in-progress">In Progress</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-completed">Completed</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="course-status">
+                                    <span class="badge badge-not-started">Not Assigned</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    
+    <script>
+        // Filter functionality
+        $(document).ready(function() {
+            // Populate the filter dropdowns dynamically (initial full population)
+            populateFilters();
+
+            // Helper function to show/hide loading indicator
+            function showLoading() {
+                $('.loading-overlay').fadeIn(200);
+            }
+
+            function hideLoading() {
+                $('.loading-overlay').fadeOut(200);
+            }
+
+            // Helper to update status and team member options based on currently visible table content
+            function updateFilterOptions() {
+                // Preserve current selections
+                const statusSelect = $('#statusFilter');
+                const memberSelect = $('#teamMemberFilter');
+                const currentStatus = statusSelect.val();
+                const currentMember = memberSelect.val();
+
+                // Build statuses from visible course cells (only visible course columns)
+                const statuses = new Set();
+                $('.team-table tbody tr:visible').each(function() {
+                    $(this).find('td:not(:first-child):visible .badge').each(function() {
+                        statuses.add($(this).text().trim());
+                    });
+                });
+
+                // Rebuild status select
+                statusSelect.empty().append('<option value="">All Statuses</option>');
+                Array.from(statuses).forEach(function(status) {
+                    const statusValue = status.toLowerCase().replace(/\s+/g, '-');
+                    statusSelect.append(`<option value="${statusValue}">${status}</option>`);
+                });
+
+                // Restore selection if still available
+                if (currentStatus && statusSelect.find(`option[value="${currentStatus}"]`).length) {
+                    statusSelect.val(currentStatus);
+                } else {
+                    statusSelect.val('');
+                }
+
+                // Build team members from visible rows
+                const members = [];
+                $('.team-table tbody tr:visible').each(function() {
+                    const memberName = $(this).find('.member-name').text().trim();
+                    if (memberName) members.push(memberName);
+                });
+
+                // Rebuild member select
+                memberSelect.empty().append('<option value="">All Team Members</option>');
+                members.forEach(function(name) {
+                    const memberValue = name.toLowerCase().replace(/\s+/g, '-');
+                    memberSelect.append(`<option value="${memberValue}">${name}</option>`);
+                });
+
+                // Restore member selection if still available
+                if (currentMember && memberSelect.find(`option[value="${currentMember}"]`).length) {
+                    memberSelect.val(currentMember);
+                } else {
+                    memberSelect.val('');
+                }
+            }
+
+            // Helper function to apply all filters together
+            function applyAllFilters() {
+                showLoading();
+
+                setTimeout(function() {
+                    const courseVal = $('#courseFilter').val() ? $('#courseFilter').val().toLowerCase() : '';
+                    const statusVal = $('#statusFilter').val() ? $('#statusFilter').val().toLowerCase() : '';
+                    const memberVal = $('#teamMemberFilter').val() ? $('#teamMemberFilter').val().toLowerCase() : '';
+                    const searchText = $('input[placeholder="Search by Team Member..."]').val().toLowerCase();
+
+                    // Update filter active indicators
+                    $('#courseFilter').toggleClass('filter-active', courseVal !== '');
+                    $('#statusFilter').toggleClass('filter-active', statusVal !== '');
+                    $('#teamMemberFilter').toggleClass('filter-active', memberVal !== '');
+                    $('input[placeholder="Search by Team Member..."]').toggleClass('filter-active', searchText !== '');
+
+                    // Count active filters for badge
+                    let activeFilterCount = 0;
+                    if (courseVal !== '') activeFilterCount++;
+                    if (statusVal !== '') activeFilterCount++;
+                    if (memberVal !== '') activeFilterCount++;
+                    if (searchText !== '') activeFilterCount++;
+
+                    // Update or remove filter count badge
+                    $('.filter-count').remove();
+                    if (activeFilterCount > 0) {
+                        $('.card-header').append(`<div class="filter-count">${activeFilterCount}</div>`);
+                    }
+
+                    // Reset visibility for rows and columns before applying
+                    $('.team-table tbody tr').show();
+                    $('.team-table th.course-column').show();
+                    $('.team-table tbody tr').each(function() {
+                        $(this).find('td:not(:first-child)').show();
+                    });
+
+                    // Apply course filter - show only the selected course column and its data
+                    if (courseVal !== '') {
+                        // Hide all course columns and their cells first
+                        $('.team-table th.course-column').hide();
+                        $('.team-table tbody tr').each(function() {
+                            $(this).find('td:not(:first-child)').hide();
+                        });
+
+                        let foundColumn = false;
+                        $('.team-table th.course-column').each(function(index) {
+                            const headerText = $(this).text().toLowerCase().replace(/\s+/g, '-');
+                            if (!foundColumn && headerText === courseVal) {
+                                // Show this header
+                                $(this).show();
+
+                                // Show corresponding cells in all rows
+                                $('.team-table tbody tr').each(function() {
+                                    $(this).find('td').eq(index + 1).show();
+                                });
+
+                                foundColumn = true;
+                            }
+                        });
+
+                        // If no matching column found, nothing to show -> hide all rows
+                        if (!foundColumn) {
+                            $('.team-table tbody tr').hide();
+                        }
+                    }
+
+                    // Apply status filter (only checks badges in visible course cells)
+                    if (statusVal !== '') {
+                        $('.team-table tbody tr').each(function() {
+                            const $row = $(this);
+                            if (!$row.is(':visible')) return; // skip hidden rows
+
+                            let hasMatchingStatus = false;
+                            $row.find('td:not(:first-child):visible').each(function() {
+                                const badgeText = $(this).find('.badge').text().toLowerCase().replace(/\s+/g, '-');
+                                if (badgeText.includes(statusVal)) {
+                                    hasMatchingStatus = true;
+                                    return false;
+                                }
+                            });
+
+                            if (!hasMatchingStatus) {
+                                $row.hide();
+                            }
+                        });
+                    }
+
+                    // Apply team member filter
+                    if (memberVal !== '') {
+                        $('.team-table tbody tr').each(function() {
+                            const memberName = $(this).find('.member-name').text().toLowerCase().replace(/\s+/g, '-');
+                            if (!memberName.includes(memberVal)) {
+                                $(this).hide();
+                            }
+                        });
+                    }
+
+                    // Apply search text filter
+                    if (searchText !== '') {
+                        $('.team-table tbody tr:visible').each(function() {
+                            const memberName = $(this).find('.member-name').text().toLowerCase();
+                            const memberDesignation = $(this).find('.member-designation').text().toLowerCase();
+                            const memberDepartment = $(this).find('.member-department').text().toLowerCase();
+
+                            if (!(memberName.includes(searchText) || 
+                                memberDesignation.includes(searchText) ||
+                                memberDepartment.includes(searchText))) {
+                                $(this).hide();
+                            }
+                        });
+                    }
+
+                    // Update dependent filter dropdown options based on what's visible now
+                    updateFilterOptions();
+
+                    // Check if any results are visible
+                    if ($('.team-table tbody tr:visible').length === 0) {
+                        $('.no-results').show();
+                        $('.team-table').hide();
+                    } else {
+                        $('.no-results').hide();
+                        $('.team-table').show();
+                    }
+
+                    hideLoading();
+                }, 200);
+            }
+
+            // Course filter
+            $('#courseFilter').change(function() {
+                applyAllFilters();
+            });
+
+            // Status filter
+            $('#statusFilter').change(function() {
+                applyAllFilters();
+            });
+
+            // Team Member filter
+            $('#teamMemberFilter').change(function() {
+                applyAllFilters();
+            });
+
+            // Reset all filters
+            $('#resetFilters').click(function() {
+                showLoading();
+
+                setTimeout(function() {
+                    // Reset dropdown selections
+                    $('#courseFilter, #statusFilter, #teamMemberFilter').val('');
+
+                    // Clear search input
+                    $('input[placeholder="Search by Team Member..."]').val('');
+
+                    // Show all rows and columns
+                    $('.team-table th.course-column').show();
+                    $('.team-table tbody tr').show();
+                    $('.team-table tbody tr td').show();
+                    $('.team-table').show();
+                    $('.no-results').hide();
+
+                    // Clear active filter styles
+                    $('#courseFilter, #statusFilter, #teamMemberFilter, input[placeholder="Search by Team Member..."]').removeClass('filter-active');
+
+                    // Remove filter count badge
+                    $('.filter-count').remove();
+
+                    // Repopulate filters from full dataset
+                    populateFilters();
+
+                    hideLoading();
+                }, 200);
+            });
+
+            // Search functionality with debounce
+            let searchTimeout;
+            $('input[placeholder="Search by Team Member..."]').keyup(function() {
+                clearTimeout(searchTimeout);
+
+                searchTimeout = setTimeout(function() {
+                    applyAllFilters();
+                }, 300);
+            });
+
+            // Function to populate the filter dropdowns with actual data from the table (full dataset)
+            function populateFilters() {
+                // Populate course filter
+                const courseSelect = $('#courseFilter');
+                courseSelect.empty().append('<option value="">All Courses</option>');
+
+                $('.team-table th.course-column').each(function() {
+                    const courseName = $(this).text().trim();
+                    const courseValue = courseName.toLowerCase().replace(/\s+/g, '-');
+                    courseSelect.append(`<option value="${courseValue}">${courseName}</option>`);
+                });
+
+                // Populate status filter from entire table
+                const statusSelect = $('#statusFilter');
+                statusSelect.empty().append('<option value="">All Statuses</option>');
+
+                const statuses = new Set();
+                $('.team-table .badge').each(function() {
+                    const statusText = $(this).text().trim();
+                    statuses.add(statusText);
+                });
+
+                statuses.forEach(status => {
+                    const statusValue = status.toLowerCase().replace(/\s+/g, '-');
+                    statusSelect.append(`<option value="${statusValue}">${status}</option>`);
+                });
+
+                // Populate team member filter from entire table
+                const memberSelect = $('#teamMemberFilter');
+                memberSelect.empty().append('<option value="">All Team Members</option>');
+
+                $('.team-table .member-name').each(function() {
+                    const memberName = $(this).text().trim();
+                    const memberValue = memberName.toLowerCase().replace(/\s+/g, '-');
+                    memberSelect.append(`<option value="${memberValue}">${memberName}</option>`);
+                });
+            }
+
+            // Sorting functionality (unchanged)
+            $('.sortable').click(function() {
+                showLoading();
+
+                const clickedHeader = $(this);
+
+                setTimeout(function() {
+                    const table = clickedHeader.closest('table');
+                    const rows = table.find('tbody tr').toArray();
+                    const column = clickedHeader.index();
+                    const sortDirection = clickedHeader.hasClass('sorted-asc') ? 'desc' : 'asc';
+
+                    // Clear all sort classes
+                    table.find('th').removeClass('sorted-asc sorted-desc');
+
+                    // Add appropriate sort class
+                    clickedHeader.addClass('sorted-' + sortDirection);
+
+                    // Sort the rows (only sorts by member name since clickable column is Team Member)
+                    rows.sort(function(a, b) {
+                        const aValue = $(a).find('td').eq(0).find('.member-name').text().toLowerCase();
+                        const bValue = $(b).find('td').eq(0).find('.member-name').text().toLowerCase();
+
+                        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+                        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+                        return 0;
+                    });
+
+                    // Reorder the rows
+                    $.each(rows, function(index, row) {
+                        table.children('tbody').append(row);
+                    });
+
+                    hideLoading();
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
