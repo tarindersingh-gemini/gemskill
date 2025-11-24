@@ -1,0 +1,134 @@
+[
+  {
+    "id": "E001",
+    "name": "John Mitchell",
+    "designation": "Senior Software Engineer",
+    "department": "Engineering",
+    "location": "New York",
+    "email": "j.mitchell@gemini.com",
+    "ec": "EC3",
+    "dc": "DC2",
+    "managerId": "M001"
+  },
+  {
+    "id": "E002",
+    "name": "Sarah Johnson",
+    "designation": "Project Manager",
+    "department": "Operations",
+    "location": "San Francisco",
+    "email": "s.johnson@gemini.com",
+    "ec": "EC2",
+    "dc": "DC1",
+    "managerId": "M001"
+  },
+  {
+    "id": "E003",
+    "name": "Michael Chen",
+    "designation": "Data Analyst",
+    "department": "Analytics",
+    "location": "Chicago",
+    "email": "m.chen@gemini.com",
+    "ec": "EC2",
+    "dc": "DC1",
+    "managerId": "M001"
+  },
+  {
+    "id": "E004",
+    "name": "Emily Davis",
+    "designation": "UX Designer",
+    "department": "Design",
+    "location": "New York",
+    "email": "e.davis@gemini.com",
+    "ec": "EC1",
+    "dc": "DC1",
+    "managerId": "M001"
+  },
+  {
+    "id": "E005",
+    "name": "David Wilson",
+    "designation": "Software Engineer",
+    "department": "Engineering",
+    "location": "Seattle",
+    "email": "d.wilson@gemini.com",
+    "ec": "EC2",
+    "dc": "DC1",
+    "managerId": "M001"
+  },
+  {
+    "id": "E006",
+    "name": "Jennifer Brown",
+    "designation": "Business Analyst",
+    "department": "Operations",
+    "location": "Boston",
+    "email": "j.brown@gemini.com",
+    "ec": "EC3",
+    "dc": "DC2",
+    "managerId": "M001"
+  },
+  {
+    "id": "E007",
+    "name": "Robert Taylor",
+    "designation": "Senior Developer",
+    "department": "Engineering",
+    "location": "Austin",
+    "email": "r.taylor@gemini.com",
+    "ec": "EC4",
+    "dc": "DC3",
+    "managerId": "M001"
+  },
+  {
+    "id": "E008",
+    "name": "Amanda Martinez",
+    "designation": "Marketing Specialist",
+    "department": "Marketing",
+    "location": "Los Angeles",
+    "email": "a.martinez@gemini.com",
+    "ec": "EC1",
+    "dc": "DC1",
+    "managerId": "M001"
+  },
+  {
+    "id": "E009",
+    "name": "Christopher Lee",
+    "designation": "Quality Assurance Lead",
+    "department": "Engineering",
+    "location": "Denver",
+    "email": "c.lee@gemini.com",
+    "ec": "EC3",
+    "dc": "DC2",
+    "managerId": "M001"
+  },
+  {
+    "id": "E010",
+    "name": "Jessica White",
+    "designation": "Product Manager",
+    "department": "Product",
+    "location": "San Francisco",
+    "email": "j.white@gemini.com",
+    "ec": "EC4",
+    "dc": "DC3",
+    "managerId": "M001"
+  },
+  {
+    "id": "E011",
+    "name": "Daniel Garcia",
+    "designation": "DevOps Engineer",
+    "department": "Engineering",
+    "location": "Portland",
+    "email": "d.garcia@gemini.com",
+    "ec": "EC2",
+    "dc": "DC2",
+    "managerId": "M001"
+  },
+  {
+    "id": "E012",
+    "name": "Lisa Anderson",
+    "designation": "HR Specialist",
+    "department": "Human Resources",
+    "location": "Chicago",
+    "email": "l.anderson@gemini.com",
+    "ec": "EC1",
+    "dc": "DC1",
+    "managerId": "M001"
+  }
+]

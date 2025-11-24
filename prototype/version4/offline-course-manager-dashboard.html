@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - Offline Course Management Dashboard</title>
+    <link rel="icon" type="image/png" href="../logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom color palette based on Athena branding */
+        :root {
+            --primary-color: #205072;
+            --secondary-color: #0f4c75;
+            --accent-color: #38a3a5;
+            --light-accent: #99dfdf;
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: all 0.3s ease;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+        
+        /* Card hover effect */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Badge pulse animation */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Modal backdrop */
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Tab active state */
+        .tab-active {
+            border-bottom: 3px solid var(--accent-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(56, 163, 165, 0.1);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Status badges with custom colors */
+        .status-accepted {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .status-pending {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .status-rejected {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .status-present {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .status-absent {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .status-scheduled {
+            background-color: #6b7280;
+            color: white;
+        }
+        
+        /* Tailwind custom colors */
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
+        
+        .bg-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .bg-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .text-primary {
+            color: var(--primary-color);
+        }
+        
+        .text-accent {
+            color: var(--accent-color);
+        }
+        
+        .border-accent {
+            border-color: var(--accent-color);
+        }
+        
+        /* Employee card checkbox */
+        input[type="checkbox"]:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        /* Calendar specific styles */
+        .calendar-date {
+            min-height: 100px;
+            padding: 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calendar-date:hover {
+            background-color: #f9fafb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .calendar-date.other-month {
+            background-color: #f9fafb;
+            color: #9ca3af;
+        }
+        
+        .calendar-date.today {
+            border: 2px solid var(--accent-color);
+            background-color: #e6f7f7;
+        }
+        
+        .calendar-date.has-event {
+            background-color: #eff6ff;
+        }
+        
+        .calendar-date-number {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+        }
+        
+        .calendar-event {
+            font-size: 0.75rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-event:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+        
+        .calendar-event.course-start {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .calendar-event.course-in-progress {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .calendar-event.course-multiple {
+            background-color: #8b5cf6;
+            color: white;
+        }
+        
+        .calendar-event-indicator {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+        }
+        
+        @media (max-width: 768px) {
+            .calendar-date {
+                min-height: 80px;
+                padding: 4px;
+            }
+            
+            .calendar-event {
+                font-size: 0.65rem;
+                padding: 2px 4px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-secondary shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <img src="../logo.png" alt="Athena Logo" class="h-8 w-auto" onerror="this.style.display='none'">
+                    <div>
+                        <h1 class="text-white text-xl font-bold">Athena LMS</h1>
+                        <p class="text-gray-300 text-xs">Offline Course Management</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-white hover:text-gray-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                    </button>
+                    <div class="flex items-center space-x-2 text-white">
+                        <div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center font-semibold">
+                            M
+                        </div>
+                        <span class="font-medium">Manager Portal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8 fade-in">
+            <h2 class="text-3xl font-bold text-primary mb-2">Offline Course Management</h2>
+            <p class="text-gray-600">Manage course nominations, track attendance, and monitor team progress</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 fade-in">
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border-l-4 border-blue-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium mb-1">Active Courses</p>
+                        <p class="text-3xl font-bold text-gray-800" id="activeCourses">0</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-full p-3">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border-l-4 border-green-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium mb-1">Total Nominations</p>
+                        <p class="text-3xl font-bold text-gray-800" id="totalNominations">0</p>
+                    </div>
+                    <div class="bg-green-100 rounded-full p-3">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium mb-1">Pending Responses</p>
+                        <p class="text-3xl font-bold text-gray-800 pulse-animation" id="pendingResponses">0</p>
+                    </div>
+                    <div class="bg-yellow-100 rounded-full p-3">
+                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border-l-4 border-purple-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium mb-1">Accepted</p>
+                        <p class="text-3xl font-bold text-gray-800" id="acceptedNominations">0</p>
+                    </div>
+                    <div class="bg-purple-100 rounded-full p-3">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white rounded-xl shadow-lg mb-8 fade-in">
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px" role="tablist">
+                    <button class="tab-active py-4 px-6 text-sm font-medium transition-all" onclick="switchTab('calendar')" id="tab-calendar">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>Event Calendar</span>
+                        </div>
+                    </button>
+                    <button class="py-4 px-6 text-sm font-medium text-gray-500 hover:text-gray-700" onclick="switchTab('courses')" id="tab-courses">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            <span>Available Courses</span>
+                        </div>
+                    </button>
+                    <button class="py-4 px-6 text-sm font-medium text-gray-500 hover:text-gray-700" onclick="switchTab('nominate')" id="tab-nominate">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                            </svg>
+                            <span>Nominate Employees</span>
+                        </div>
+                    </button>
+                    <button class="py-4 px-6 text-sm font-medium text-gray-500 hover:text-gray-700" onclick="switchTab('attendance')" id="tab-attendance">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span>Attendance Tracking</span>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="p-6">
+                <!-- Event Calendar Section -->
+                <div id="content-calendar" class="tab-content">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Event Calendar</h3>
+                        <p class="text-gray-600 text-sm">View upcoming offline courses with dates and locations</p>
+                    </div>
+
+                    <!-- Calendar Navigation -->
+                    <div class="bg-white rounded-lg shadow-md mb-6 p-4">
+                        <div class="flex justify-between items-center">
+                            <button onclick="previousMonth()" class="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                                <span class="font-medium">Previous</span>
+                            </button>
+                            
+                            <div class="text-center">
+                                <h4 class="text-2xl font-bold text-primary" id="calendarMonthYear">November 2025</h4>
+                                <button onclick="goToToday()" class="text-sm text-accent hover:underline mt-1">Today</button>
+                            </div>
+                            
+                            <button onclick="nextMonth()" class="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all">
+                                <span class="font-medium">Next</span>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Grid -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="calendar-grid">
+                            <!-- Day headers -->
+                            <div class="grid grid-cols-7 gap-2 mb-4">
+                                <div class="text-center font-semibold text-gray-600 py-2">Sun</div>
+                                <div class="text-center font-semibold text-gray-600 py-2">Mon</div>
+                                <div class="text-center font-semibold text-gray-600 py-2">Tue</div>
+                                <div class="text-center font-semibold text-gray-600 py-2">Wed</div>
+                                <div class="text-center font-semibold text-gray-600 py-2">Thu</div>
+                                <div class="text-center font-semibold text-gray-600 py-2">Fri</div>
+                                <div class="text-center font-semibold text-gray-600 py-2">Sat</div>
+                            </div>
+                            
+                            <!-- Calendar dates -->
+                            <div id="calendarDates" class="grid grid-cols-7 gap-2">
+                                <!-- Dates will be dynamically generated -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="mt-6 bg-white rounded-lg shadow-md p-4">
+                        <h5 class="font-semibold text-gray-800 mb-3">Legend</h5>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-4 h-4 bg-blue-500 rounded"></div>
+                                <span class="text-sm text-gray-600">Course Start Date</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-4 h-4 bg-green-500 rounded"></div>
+                                <span class="text-sm text-gray-600">Course in Progress</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-4 h-4 bg-purple-500 rounded"></div>
+                                <span class="text-sm text-gray-600">Multiple Courses</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-4 h-4 bg-accent border-2 border-accent rounded"></div>
+                                <span class="text-sm text-gray-600">Today</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available Courses Section -->
+                <div id="content-courses" class="tab-content hidden">
+                    <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Available Offline Courses</h3>
+                            <p class="text-gray-600 text-sm mt-1">Browse and explore upcoming training programs</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="text" id="courseSearch" placeholder="Search courses..." 
+                                   class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent">
+                            <select id="courseFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent">
+                                <option value="all">All Courses</option>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="available">Available Seats</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="coursesList" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Courses will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Nominate Employees Section -->
+                <div id="content-nominate" class="tab-content hidden">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Nominate Employees for Courses</h3>
+                        <p class="text-gray-600 text-sm">Select a course to view nominations and nominate team members</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Course</label>
+                        <select id="nominationCourseSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent text-gray-800">
+                            <option value="">Choose a course...</option>
+                        </select>
+                    </div>
+
+                    <div id="nominationDetails" class="hidden">
+                        <!-- Current Nominations -->
+                        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Current Nominations</h4>
+                            <div id="currentNominations" class="space-y-3">
+                                <!-- Nominations will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Nominate New Employees -->
+                        <div class="bg-white border-2 border-dashed border-gray-300 rounded-lg p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="text-lg font-semibold text-gray-800">Nominate Team Members</h4>
+                                <button onclick="nominateSelectedEmployees()" 
+                                        class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-opacity-90 font-medium flex items-center space-x-2 shadow-md hover:shadow-lg">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    <span>Nominate Selected</span>
+                                </button>
+                            </div>
+                            
+                            <div class="mb-4 flex flex-wrap gap-3">
+                                <input type="text" id="employeeSearch" placeholder="Search employees..." 
+                                       class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent">
+                                <select id="departmentFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent">
+                                    <option value="">All Departments</option>
+                                </select>
+                                <select id="locationFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent">
+                                    <option value="">All Locations</option>
+                                </select>
+                            </div>
+
+                            <div id="employeesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                                <!-- Employees will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Tracking Section -->
+                <div id="content-attendance" class="tab-content hidden">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Attendance Tracking</h3>
+                        <p class="text-gray-600 text-sm">Monitor attendance records for nominated employees</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Course</label>
+                        <select id="attendanceCourseSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent text-gray-800">
+                            <option value="">Choose a course...</option>
+                        </select>
+                    </div>
+
+                    <div id="attendanceDetails" class="hidden">
+                        <div class="bg-white rounded-lg shadow overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Training Dates</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completion %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="attendanceTableBody" class="bg-white divide-y divide-gray-200">
+                                        <!-- Attendance records will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Details Modal -->
+    <div id="courseModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="bg-primary text-white px-6 py-4 rounded-t-2xl flex justify-between items-center">
+                <h3 class="text-2xl font-bold" id="modalCourseTitle">Course Details</h3>
+                <button onclick="closeModal()" class="text-white hover:text-gray-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalCourseContent" class="p-6">
+                <!-- Course details will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden items-center space-x-3 z-50">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <script>
+        // Global data stores
+        let courses = [];
+        let employees = [];
+        let nominations = [];
+        let attendance = [];
+        let currentCourseId = null;
+        
+        // Calendar state
+        let currentCalendarDate = new Date();
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadData();
+            updateStats();
+            renderCourses();
+            populateCourseSelects();
+            renderCalendar();
+        });
+
+        // Load all data from JSON files
+        async function loadData() {
+            try {
+                const [coursesRes, employeesRes, nominationsRes, attendanceRes] = await Promise.all([
+                    fetch('data/offline-courses.json'),
+                    fetch('data/employees.json'),
+                    fetch('data/nominations.json'),
+                    fetch('data/attendance.json')
+                ]);
+
+                courses = await coursesRes.json();
+                employees = await employeesRes.json();
+                nominations = await nominationsRes.json();
+                attendance = await attendanceRes.json();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showToast('Error loading data. Please refresh the page.', 'error');
+            }
+        }
+
+        // Update statistics cards
+        function updateStats() {
+            document.getElementById('activeCourses').textContent = courses.filter(c => c.status === 'active').length;
+            document.getElementById('totalNominations').textContent = nominations.length;
+            document.getElementById('pendingResponses').textContent = nominations.filter(n => n.status === 'pending').length;
+            document.getElementById('acceptedNominations').textContent = nominations.filter(n => n.status === 'accepted').length;
+        }
+
+        // Format date to readable format
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Render courses list
+        function renderCourses() {
+            const container = document.getElementById('coursesList');
+            const searchTerm = document.getElementById('courseSearch').value.toLowerCase();
+            const filter = document.getElementById('courseFilter').value;
+
+            let filteredCourses = courses.filter(course => {
+                const matchesSearch = course.title.toLowerCase().includes(searchTerm) || 
+                                    course.description.toLowerCase().includes(searchTerm);
+                
+                if (filter === 'upcoming') {
+                    const startDate = new Date(course.startDate);
+                    const today = new Date();
+                    return matchesSearch && startDate > today;
+                }
+                
+                if (filter === 'available') {
+                    return matchesSearch && course.currentParticipants < course.maxParticipants;
+                }
+                
+                return matchesSearch;
+            });
+
+            container.innerHTML = filteredCourses.map(course => {
+                const availableSeats = course.maxParticipants - course.currentParticipants;
+                const isUpcoming = new Date(course.startDate) > new Date();
+                
+                return `
+                    <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden card-hover border border-gray-200">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold">${course.title}</h4>
+                                ${isUpcoming ? '<span class="bg-green-400 text-white text-xs px-3 py-1 rounded-full font-semibold">Upcoming</span>' : ''}
+                            </div>
+                            <p class="text-blue-100 text-sm">${course.duration} | ${course.location}</p>
+                        </div>
+                        
+                        <div class="p-6">
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">${course.description}</p>
+                            
+                            <div class="space-y-3 mb-4">
+                                <div class="flex items-center text-sm text-gray-700">
+                                    <svg class="w-5 h-5 mr-2 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span><strong>Dates:</strong> ${formatDate(course.startDate)} - ${formatDate(course.endDate)}</span>
+                                </div>
+                                
+                                <div class="flex items-center text-sm text-gray-700">
+                                    <svg class="w-5 h-5 mr-2 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span><strong>Instructor:</strong> ${course.instructor.name}</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="flex items-center text-gray-700">
+                                        <svg class="w-5 h-5 mr-2 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                        <span><strong>Available:</strong> ${availableSeats} of ${course.maxParticipants} seats</span>
+                                    </div>
+                                    ${availableSeats > 0 ? '<span class="text-green-600 font-semibold text-xs">🟢 Open</span>' : '<span class="text-red-600 font-semibold text-xs">🔴 Full</span>'}
+                                </div>
+                            </div>
+                            
+                            <div class="pt-4 border-t border-gray-200">
+                                <button onclick="showCourseDetails('${course.id}')" 
+                                        class="w-full bg-accent text-white py-2 rounded-lg hover:bg-opacity-90 font-medium transition-all flex items-center justify-center space-x-2">
+                                    <span>View Details</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (filteredCourses.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-2 text-center py-12">
+                        <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-500 text-lg">No courses found matching your criteria</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Show course details in modal
+        function showCourseDetails(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            const modal = document.getElementById('courseModal');
+            const title = document.getElementById('modalCourseTitle');
+            const content = document.getElementById('modalCourseContent');
+
+            title.textContent = course.title;
+            
+            const targetAudienceEC = Array.isArray(course.targetAudience.ec) ? 
+                (course.targetAudience.ec[0] === 'ALL' ? 'All EC Levels' : course.targetAudience.ec.join(', ')) : 
+                course.targetAudience.ec;
+            
+            const targetAudienceDC = Array.isArray(course.targetAudience.dc) ? 
+                (course.targetAudience.dc[0] === 'ALL' ? 'All DC Levels' : course.targetAudience.dc.join(', ')) : 
+                course.targetAudience.dc;
+
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Description</h4>
+                        <p class="text-gray-600">${course.description}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Course Information</h4>
+                            <div class="space-y-2 text-sm">
+                                <p><strong class="text-gray-700">Duration:</strong> <span class="text-gray-600">${course.duration}</span></p>
+                                <p><strong class="text-gray-700">Owner:</strong> <span class="text-gray-600">${course.owner}</span></p>
+                                <p><strong class="text-gray-700">Location:</strong> <span class="text-gray-600">${course.location}</span></p>
+                                <p><strong class="text-gray-700">Start Date:</strong> <span class="text-gray-600">${formatDate(course.startDate)}</span></p>
+                                <p><strong class="text-gray-700">End Date:</strong> <span class="text-gray-600">${formatDate(course.endDate)}</span></p>
+                                <p><strong class="text-gray-700">Attendance Threshold:</strong> <span class="text-gray-600">${course.attendanceThreshold}%</span></p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Instructor Details</h4>
+                            <div class="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
+                                <p><strong class="text-gray-700">Name:</strong> <span class="text-gray-600">${course.instructor.name}</span></p>
+                                <p><strong class="text-gray-700">Email:</strong> <span class="text-gray-600">${course.instructor.email}</span></p>
+                                <p><strong class="text-gray-700">Phone:</strong> <span class="text-gray-600">${course.instructor.phone}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Target Audience</h4>
+                        <div class="flex space-x-4">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">EC: ${targetAudienceEC}</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">DC: ${targetAudienceDC}</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Prerequisites</h4>
+                        <p class="text-gray-600 text-sm">${course.prerequisites}</p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Course Materials</h4>
+                        <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                            ${course.courseMaterials.map(material => `<li>${material}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Training Dates</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${course.trainingDates.map(date => `
+                                <span class="bg-accent bg-opacity-10 text-accent px-3 py-1 rounded-lg text-sm font-medium">
+                                    ${formatDate(date)}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Seats Available</p>
+                                <p class="text-2xl font-bold text-gray-800">${course.maxParticipants - course.currentParticipants} / ${course.maxParticipants}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600">Current Participants</p>
+                                <p class="text-2xl font-bold text-accent">${course.currentParticipants}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('courseModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Populate course select dropdowns
+        function populateCourseSelects() {
+            const nominationSelect = document.getElementById('nominationCourseSelect');
+            const attendanceSelect = document.getElementById('attendanceCourseSelect');
+
+            const options = courses.filter(c => c.status === 'active').map(course => 
+                `<option value="${course.id}">${course.title} (${formatDate(course.startDate)})</option>`
+            ).join('');
+
+            nominationSelect.innerHTML += options;
+            attendanceSelect.innerHTML += options;
+        }
+
+        // Load nominations for selected course
+        document.getElementById('nominationCourseSelect').addEventListener('change', function() {
+            currentCourseId = this.value;
+            
+            if (!currentCourseId) {
+                document.getElementById('nominationDetails').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('nominationDetails').classList.remove('hidden');
+            loadCurrentNominations();
+            loadEmployeesForNomination();
+            populateFilters();
+        });
+
+        // Load current nominations
+        function loadCurrentNominations() {
+            const container = document.getElementById('currentNominations');
+            const courseNominations = nominations.filter(n => n.courseId === currentCourseId);
+
+            if (courseNominations.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">No nominations yet for this course</p>';
+                return;
+            }
+
+            container.innerHTML = courseNominations.map(nom => {
+                const employee = employees.find(e => e.id === nom.employeeId);
+                if (!employee) return '';
+
+                const statusColors = {
+                    'accepted': 'bg-green-100 text-green-800 border-green-300',
+                    'pending': 'bg-yellow-100 text-yellow-800 border-yellow-300',
+                    'rejected': 'bg-red-100 text-red-800 border-red-300'
+                };
+
+                return `
+                    <div class="flex items-center justify-between p-4 bg-white rounded-lg border-2 ${statusColors[nom.status]} transition-all hover:shadow-md">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-semibold">
+                                ${employee.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">${employee.name}</p>
+                                <p class="text-xs text-gray-600">${employee.designation} - ${employee.department}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColors[nom.status]}">
+                                ${nom.status.toUpperCase()}
+                            </span>
+                            ${nom.status === 'pending' ? `
+                                <button onclick="sendReminder('${nom.id}')" 
+                                        class="text-accent hover:text-opacity-80 text-sm font-medium flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                    </svg>
+                                    <span>Remind</span>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load employees for nomination
+        function loadEmployeesForNomination() {
+            const container = document.getElementById('employeesList');
+            const course = courses.find(c => c.id === currentCourseId);
+            if (!course) return;
+
+            // Filter already nominated employees
+            const nominatedEmployeeIds = nominations
+                .filter(n => n.courseId === currentCourseId)
+                .map(n => n.employeeId);
+
+            const availableEmployees = employees.filter(emp => 
+                !nominatedEmployeeIds.includes(emp.id) &&
+                isEligibleForCourse(emp, course)
+            );
+
+            if (availableEmployees.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8 col-span-3">All eligible employees have been nominated</p>';
+                return;
+            }
+
+            renderEmployeeCards(availableEmployees);
+        }
+
+        // Check if employee is eligible for course
+        function isEligibleForCourse(employee, course) {
+            const ecMatch = course.targetAudience.ec[0] === 'ALL' || course.targetAudience.ec.includes(employee.ec);
+            const dcMatch = course.targetAudience.dc[0] === 'ALL' || course.targetAudience.dc.includes(employee.dc);
+            return ecMatch && dcMatch;
+        }
+
+        // Render employee cards
+        function renderEmployeeCards(employeeList = null) {
+            const container = document.getElementById('employeesList');
+            const searchTerm = document.getElementById('employeeSearch').value.toLowerCase();
+            const deptFilter = document.getElementById('departmentFilter').value;
+            const locFilter = document.getElementById('locationFilter').value;
+
+            let employeesToRender = employeeList || employees;
+
+            // Apply filters
+            employeesToRender = employeesToRender.filter(emp => {
+                const matchesSearch = emp.name.toLowerCase().includes(searchTerm) || 
+                                    emp.designation.toLowerCase().includes(searchTerm);
+                const matchesDept = !deptFilter || emp.department === deptFilter;
+                const matchesLoc = !locFilter || emp.location === locFilter;
+                
+                return matchesSearch && matchesDept && matchesLoc;
+            });
+
+            container.innerHTML = employeesToRender.map(emp => `
+                <div class="bg-gray-50 rounded-lg p-4 border-2 border-gray-200 hover:border-accent transition-all">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 text-white flex items-center justify-center font-bold text-lg">
+                                ${emp.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">${emp.name}</p>
+                                <p class="text-xs text-gray-600">${emp.designation}</p>
+                            </div>
+                        </div>
+                        <input type="checkbox" value="${emp.id}" 
+                               class="employee-checkbox w-5 h-5 text-accent border-gray-300 rounded focus:ring-accent">
+                    </div>
+                    <div class="space-y-1 text-xs text-gray-600">
+                        <p><strong>Dept:</strong> ${emp.department}</p>
+                        <p><strong>Location:</strong> ${emp.location}</p>
+                        <div class="flex space-x-2 mt-2">
+                            <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">${emp.ec}</span>
+                            <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">${emp.dc}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Populate department and location filters
+        function populateFilters() {
+            const departments = [...new Set(employees.map(e => e.department))].sort();
+            const locations = [...new Set(employees.map(e => e.location))].sort();
+
+            const deptSelect = document.getElementById('departmentFilter');
+            const locSelect = document.getElementById('locationFilter');
+
+            deptSelect.innerHTML = '<option value="">All Departments</option>' + 
+                departments.map(d => `<option value="${d}">${d}</option>`).join('');
+            
+            locSelect.innerHTML = '<option value="">All Locations</option>' + 
+                locations.map(l => `<option value="${l}">${l}</option>`).join('');
+        }
+
+        // Nominate selected employees
+        function nominateSelectedEmployees() {
+            const checkboxes = document.querySelectorAll('.employee-checkbox:checked');
+            
+            if (checkboxes.length === 0) {
+                showToast('Please select at least one employee', 'warning');
+                return;
+            }
+
+            const selectedEmployeeIds = Array.from(checkboxes).map(cb => cb.value);
+            
+            // Create nominations
+            selectedEmployeeIds.forEach(empId => {
+                const newNomination = {
+                    id: `N${String(nominations.length + 1).padStart(3, '0')}`,
+                    courseId: currentCourseId,
+                    employeeId: empId,
+                    nominatedBy: 'M001',
+                    nominatedDate: new Date().toISOString().split('T')[0],
+                    status: 'pending',
+                    employeeResponse: null,
+                    responseDate: null
+                };
+                nominations.push(newNomination);
+            });
+
+            showToast(`Successfully nominated ${checkboxes.length} employee(s)!`, 'success');
+            loadCurrentNominations();
+            loadEmployeesForNomination();
+            updateStats();
+        }
+
+        // Send reminder
+        function sendReminder(nominationId) {
+            showToast('Reminder sent successfully!', 'success');
+        }
+
+        // Load attendance tracking
+        document.getElementById('attendanceCourseSelect').addEventListener('change', function() {
+            const courseId = this.value;
+            
+            if (!courseId) {
+                document.getElementById('attendanceDetails').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('attendanceDetails').classList.remove('hidden');
+            loadAttendanceData(courseId);
+        });
+
+        // Load attendance data
+        function loadAttendanceData(courseId) {
+            const tbody = document.getElementById('attendanceTableBody');
+            const course = courses.find(c => c.id === courseId);
+            const courseNominations = nominations.filter(n => n.courseId === courseId && n.status === 'accepted');
+
+            if (courseNominations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-500">No accepted nominations for this course</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = courseNominations.map(nom => {
+                const employee = employees.find(e => e.id === nom.employeeId);
+                if (!employee) return '';
+
+                const empAttendance = attendance.filter(a => a.nominationId === nom.id);
+                const totalDays = course.trainingDates.length;
+                const presentDays = empAttendance.filter(a => a.status === 'present').length;
+                const completionPct = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
+
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-semibold mr-3">
+                                    ${employee.name.split(' ').map(n => n[0]).join('')}
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium text-gray-900">${employee.name}</div>
+                                    <div class="text-sm text-gray-500">${employee.designation}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${employee.department}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">
+                            <div class="flex flex-wrap gap-1">
+                                ${course.trainingDates.map(date => {
+                                    const attRecord = empAttendance.find(a => a.trainingDate === date);
+                                    const statusClass = attRecord ? 
+                                        (attRecord.status === 'present' ? 'bg-green-100 text-green-800' : 
+                                         attRecord.status === 'absent' ? 'bg-red-100 text-red-800' : 
+                                         'bg-gray-100 text-gray-600') : 'bg-gray-100 text-gray-600';
+                                    
+                                    return `<span class="px-2 py-1 rounded text-xs ${statusClass}">${formatDate(date).split(',')[0]}</span>`;
+                                }).join('')}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm">
+                            <div class="space-y-1">
+                                ${empAttendance.map(att => {
+                                    const statusBadge = att.status === 'present' ? 'bg-green-100 text-green-800' : 
+                                                       att.status === 'absent' ? 'bg-red-100 text-red-800' : 
+                                                       'bg-gray-100 text-gray-600';
+                                    return `<span class="inline-block px-2 py-1 rounded-full text-xs font-medium ${statusBadge}">${att.status.toUpperCase()}</span>`;
+                                }).join(' ')}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2" style="width: 80px;">
+                                    <div class="h-2.5 rounded-full ${completionPct >= course.attendanceThreshold ? 'bg-green-500' : 'bg-yellow-500'}" 
+                                         style="width: ${completionPct}%"></div>
+                                </div>
+                                <span class="text-sm font-semibold ${completionPct >= course.attendanceThreshold ? 'text-green-600' : 'text-yellow-600'}">
+                                    ${completionPct}%
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('nav[role="tablist"] button').forEach(tab => {
+                tab.classList.remove('tab-active', 'text-primary');
+                tab.classList.add('text-gray-500');
+            });
+
+            // Show selected content
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            
+            // Add active class to selected tab
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.add('tab-active', 'text-primary');
+            activeTab.classList.remove('text-gray-500');
+            
+            // Render calendar when switching to calendar tab
+            if (tabName === 'calendar') {
+                renderCalendar();
+            }
+        }
+        
+        // Calendar functions
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            // Update month/year display
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('calendarMonthYear').textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+            
+            // Get previous month's last days
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            
+            const calendarDates = document.getElementById('calendarDates');
+            calendarDates.innerHTML = '';
+            
+            const today = new Date();
+            const todayDate = today.getDate();
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+            
+            // Add previous month's dates
+            for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+                const date = prevMonthLastDay - i;
+                calendarDates.appendChild(createDateCell(date, true, year, month - 1));
+            }
+            
+            // Add current month's dates
+            for (let date = 1; date <= daysInMonth; date++) {
+                const isToday = date === todayDate && month === todayMonth && year === todayYear;
+                const cell = createDateCell(date, false, year, month, isToday);
+                calendarDates.appendChild(cell);
+            }
+            
+            // Add next month's dates to fill the grid
+            const totalCells = calendarDates.children.length;
+            const remainingCells = 42 - totalCells; // 6 rows x 7 days
+            for (let date = 1; date <= remainingCells; date++) {
+                calendarDates.appendChild(createDateCell(date, true, year, month + 1));
+            }
+        }
+        
+        function createDateCell(date, isOtherMonth, year, month, isToday = false) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-date';
+            
+            if (isOtherMonth) {
+                cell.classList.add('other-month');
+            }
+            
+            if (isToday) {
+                cell.classList.add('today');
+            }
+            
+            // Create date number
+            const dateNumber = document.createElement('div');
+            dateNumber.className = 'calendar-date-number';
+            dateNumber.textContent = date;
+            cell.appendChild(dateNumber);
+            
+            // Get courses for this date
+            if (!isOtherMonth) {
+                const cellDate = new Date(year, month, date);
+                const coursesOnDate = getCoursesForDate(cellDate);
+                
+                if (coursesOnDate.length > 0) {
+                    cell.classList.add('has-event');
+                    
+                    // Add course events (max 3 visible)
+                    const maxVisible = 3;
+                    coursesOnDate.slice(0, maxVisible).forEach((course, index) => {
+                        const eventDiv = document.createElement('div');
+                        const courseDate = new Date(course.startDate);
+                        const isStartDate = cellDate.toDateString() === courseDate.toDateString();
+                        
+                        if (coursesOnDate.length > 1) {
+                            eventDiv.className = 'calendar-event course-multiple';
+                        } else if (isStartDate) {
+                            eventDiv.className = 'calendar-event course-start';
+                        } else {
+                            eventDiv.className = 'calendar-event course-in-progress';
+                        }
+                        
+                        eventDiv.textContent = course.title;
+                        eventDiv.title = `${course.title} - ${course.location}`;
+                        eventDiv.onclick = (e) => {
+                            e.stopPropagation();
+                            showCourseDetails(course.id);
+                        };
+                        cell.appendChild(eventDiv);
+                    });
+                    
+                    // Add indicator if more courses exist
+                    if (coursesOnDate.length > maxVisible) {
+                        const moreDiv = document.createElement('div');
+                        moreDiv.className = 'calendar-event';
+                        moreDiv.style.backgroundColor = '#6b7280';
+                        moreDiv.style.color = 'white';
+                        moreDiv.textContent = `+${coursesOnDate.length - maxVisible} more`;
+                        moreDiv.onclick = (e) => {
+                            e.stopPropagation();
+                            showCoursesForDate(cellDate, coursesOnDate);
+                        };
+                        cell.appendChild(moreDiv);
+                    }
+                }
+            }
+            
+            return cell;
+        }
+        
+        function getCoursesForDate(date) {
+            return courses.filter(course => {
+                if (course.status !== 'active') return false;
+                
+                const startDate = new Date(course.startDate);
+                const endDate = new Date(course.endDate);
+                
+                // Reset time part for accurate comparison
+                const checkDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                const courseStart = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+                const courseEnd = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                
+                return checkDate >= courseStart && checkDate <= courseEnd;
+            });
+        }
+        
+        function showCoursesForDate(date, coursesOnDate) {
+            const modal = document.getElementById('courseModal');
+            const title = document.getElementById('modalCourseTitle');
+            const content = document.getElementById('modalCourseContent');
+            
+            title.textContent = `Courses on ${formatDate(date.toISOString())}`;
+            
+            content.innerHTML = `
+                <div class="space-y-4">
+                    ${coursesOnDate.map(course => `
+                        <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-accent transition-all cursor-pointer" onclick="showCourseDetails('${course.id}')">
+                            <h5 class="font-bold text-lg text-gray-800 mb-2">${course.title}</h5>
+                            <p class="text-sm text-gray-600 mb-3">${course.description}</p>
+                            <div class="flex flex-wrap gap-3 text-sm">
+                                <span class="flex items-center text-gray-700">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    ${course.duration}
+                                </span>
+                                <span class="flex items-center text-gray-700">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    ${course.location}
+                                </span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        
+        function previousMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        }
+        
+        function nextMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        }
+        
+        function goToToday() {
+            currentCalendarDate = new Date();
+            renderCalendar();
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            
+            // Set color based on type
+            toast.className = 'fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 z-50';
+            if (type === 'success') {
+                toast.classList.add('bg-green-500', 'text-white');
+            } else if (type === 'error') {
+                toast.classList.add('bg-red-500', 'text-white');
+            } else if (type === 'warning') {
+                toast.classList.add('bg-yellow-500', 'text-white');
+            }
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Search and filter event listeners
+        document.getElementById('courseSearch').addEventListener('input', renderCourses);
+        document.getElementById('courseFilter').addEventListener('change', renderCourses);
+        document.getElementById('employeeSearch').addEventListener('input', () => renderEmployeeCards());
+        document.getElementById('departmentFilter').addEventListener('change', () => renderEmployeeCards());
+        document.getElementById('locationFilter').addEventListener('change', () => renderEmployeeCards());
+
+        // Close modal on backdrop click
+        document.getElementById('courseModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

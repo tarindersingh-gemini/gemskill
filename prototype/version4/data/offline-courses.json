@@ -1,0 +1,153 @@
+[
+  {
+    "id": "OC001",
+    "title": "Advanced Leadership Skills",
+    "owner": "Jane Smith",
+    "description": "A comprehensive program designed to enhance leadership capabilities, strategic thinking, and team management skills for senior professionals.",
+    "duration": "3 days",
+    "targetAudience": {
+      "ec": ["EC1", "EC2", "EC3", "EC4"],
+      "dc": ["DC1", "DC2", "DC3"]
+    },
+    "startDate": "2025-12-05",
+    "endDate": "2025-12-07",
+    "prerequisites": "Minimum 5 years of experience in management role",
+    "instructor": {
+      "name": "Dr. Michael Chen",
+      "email": "m.chen@gemini.com",
+      "phone": "+1-555-0101"
+    },
+    "courseMaterials": [
+      "Leadership Handbook.pdf",
+      "Case Studies - Leadership.pdf",
+      "Video Lectures (5 modules)"
+    ],
+    "attendanceThreshold": 80,
+    "trainingDates": ["2025-12-05", "2025-12-06", "2025-12-07"],
+    "location": "Conference Room A, Building 1",
+    "status": "active",
+    "maxParticipants": 30,
+    "currentParticipants": 18
+  },
+  {
+    "id": "OC002",
+    "title": "Agile Project Management Bootcamp",
+    "owner": "Robert Johnson",
+    "description": "Intensive hands-on training in Agile methodologies, Scrum framework, and practical implementation strategies for project teams.",
+    "duration": "2 days",
+    "targetAudience": {
+      "ec": ["EC1", "EC2", "EC3"],
+      "dc": ["DC1", "DC2"]
+    },
+    "startDate": "2025-12-10",
+    "endDate": "2025-12-11",
+    "prerequisites": "Basic understanding of project management",
+    "instructor": {
+      "name": "Sarah Williams",
+      "email": "s.williams@gemini.com",
+      "phone": "+1-555-0102"
+    },
+    "courseMaterials": [
+      "Agile Guide.pdf",
+      "Scrum Master Toolkit.pdf",
+      "Workshop Materials"
+    ],
+    "attendanceThreshold": 90,
+    "trainingDates": ["2025-12-10", "2025-12-11"],
+    "location": "Training Center, Building 2",
+    "status": "active",
+    "maxParticipants": 25,
+    "currentParticipants": 15
+  },
+  {
+    "id": "OC003",
+    "title": "Data Analytics and Visualization",
+    "owner": "Emily Davis",
+    "description": "Learn advanced data analytics techniques, data visualization best practices, and hands-on experience with modern analytics tools.",
+    "duration": "4 days",
+    "targetAudience": {
+      "ec": ["EC1", "EC2", "EC3", "EC4", "EC5"],
+      "dc": ["DC1", "DC2", "DC3", "DC4"]
+    },
+    "startDate": "2025-12-15",
+    "endDate": "2025-12-18",
+    "prerequisites": "Basic knowledge of statistics and Excel",
+    "instructor": {
+      "name": "Prof. David Kumar",
+      "email": "d.kumar@gemini.com",
+      "phone": "+1-555-0103"
+    },
+    "courseMaterials": [
+      "Data Analytics Fundamentals.pdf",
+      "Visualization Best Practices.pdf",
+      "Lab Exercises (10 modules)",
+      "Sample Datasets"
+    ],
+    "attendanceThreshold": 75,
+    "trainingDates": ["2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18"],
+    "location": "Computer Lab, Building 3",
+    "status": "active",
+    "maxParticipants": 20,
+    "currentParticipants": 12
+  },
+  {
+    "id": "OC004",
+    "title": "Effective Communication and Presentation",
+    "owner": "Lisa Anderson",
+    "description": "Master the art of professional communication, public speaking, and impactful presentation skills for business contexts.",
+    "duration": "2 days",
+    "targetAudience": {
+      "ec": ["EC1", "EC2", "EC3", "EC4", "EC5"],
+      "dc": ["ALL"]
+    },
+    "startDate": "2025-12-20",
+    "endDate": "2025-12-21",
+    "prerequisites": "None",
+    "instructor": {
+      "name": "Amanda Thompson",
+      "email": "a.thompson@gemini.com",
+      "phone": "+1-555-0104"
+    },
+    "courseMaterials": [
+      "Communication Guide.pdf",
+      "Presentation Templates",
+      "Practice Scenarios"
+    ],
+    "attendanceThreshold": 100,
+    "trainingDates": ["2025-12-20", "2025-12-21"],
+    "location": "Auditorium, Main Building",
+    "status": "active",
+    "maxParticipants": 40,
+    "currentParticipants": 28
+  },
+  {
+    "id": "OC005",
+    "title": "Cybersecurity Awareness Workshop",
+    "owner": "Mark Wilson",
+    "description": "Essential cybersecurity training covering threat awareness, best practices, and incident response for all employees.",
+    "duration": "1 day",
+    "targetAudience": {
+      "ec": ["ALL"],
+      "dc": ["ALL"]
+    },
+    "startDate": "2026-01-08",
+    "endDate": "2026-01-08",
+    "prerequisites": "None",
+    "instructor": {
+      "name": "James Brown",
+      "email": "j.brown@gemini.com",
+      "phone": "+1-555-0105"
+    },
+    "courseMaterials": [
+      "Cybersecurity Handbook.pdf",
+      "Security Checklist",
+      "Video Demonstrations"
+    ],
+    "attendanceThreshold": 100,
+    "trainingDates": ["2026-01-08"],
+    "location": "Conference Room B, Building 1",
+    "status": "active",
+    "maxParticipants": 50,
+    "currentParticipants": 35
+  }
+]

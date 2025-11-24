@@ -1,0 +1,167 @@
+[
+  {
+    "id": "A001",
+    "nominationId": "N001",
+    "courseId": "OC001",
+    "employeeId": "E001",
+    "trainingDate": "2025-12-05",
+    "status": "present",
+    "markedBy": "Jane Smith",
+    "markedDate": "2025-12-05",
+    "remarks": ""
+  },
+  {
+    "id": "A002",
+    "nominationId": "N001",
+    "courseId": "OC001",
+    "employeeId": "E001",
+    "trainingDate": "2025-12-06",
+    "status": "present",
+    "markedBy": "Jane Smith",
+    "markedDate": "2025-12-06",
+    "remarks": ""
+  },
+  {
+    "id": "A003",
+    "nominationId": "N002",
+    "courseId": "OC001",
+    "employeeId": "E006",
+    "trainingDate": "2025-12-05",
+    "status": "present",
+    "markedBy": "Jane Smith",
+    "markedDate": "2025-12-05",
+    "remarks": ""
+  },
+  {
+    "id": "A004",
+    "nominationId": "N002",
+    "courseId": "OC001",
+    "employeeId": "E006",
+    "trainingDate": "2025-12-06",
+    "status": "absent",
+    "markedBy": "Jane Smith",
+    "markedDate": "2025-12-06",
+    "remarks": "Medical emergency"
+  },
+  {
+    "id": "A005",
+    "nominationId": "N004",
+    "courseId": "OC002",
+    "employeeId": "E002",
+    "trainingDate": "2025-12-10",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A006",
+    "nominationId": "N004",
+    "courseId": "OC002",
+    "employeeId": "E002",
+    "trainingDate": "2025-12-11",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A007",
+    "nominationId": "N007",
+    "courseId": "OC003",
+    "employeeId": "E003",
+    "trainingDate": "2025-12-15",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A008",
+    "nominationId": "N007",
+    "courseId": "OC003",
+    "employeeId": "E003",
+    "trainingDate": "2025-12-16",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A009",
+    "nominationId": "N007",
+    "courseId": "OC003",
+    "employeeId": "E003",
+    "trainingDate": "2025-12-17",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A010",
+    "nominationId": "N007",
+    "courseId": "OC003",
+    "employeeId": "E003",
+    "trainingDate": "2025-12-18",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A011",
+    "nominationId": "N009",
+    "courseId": "OC004",
+    "employeeId": "E004",
+    "trainingDate": "2025-12-20",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A012",
+    "nominationId": "N009",
+    "courseId": "OC004",
+    "employeeId": "E004",
+    "trainingDate": "2025-12-21",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A013",
+    "nominationId": "N010",
+    "courseId": "OC004",
+    "employeeId": "E008",
+    "trainingDate": "2025-12-20",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A014",
+    "nominationId": "N010",
+    "courseId": "OC004",
+    "employeeId": "E008",
+    "trainingDate": "2025-12-21",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  },
+  {
+    "id": "A015",
+    "nominationId": "N015",
+    "courseId": "OC005",
+    "employeeId": "E011",
+    "trainingDate": "2026-01-08",
+    "status": "scheduled",
+    "markedBy": null,
+    "markedDate": null,
+    "remarks": ""
+  }
+]

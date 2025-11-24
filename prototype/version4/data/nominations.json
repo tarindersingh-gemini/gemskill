@@ -1,0 +1,152 @@
+[
+  {
+    "id": "N001",
+    "courseId": "OC001",
+    "employeeId": "E001",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-15",
+    "status": "accepted",
+    "employeeResponse": "I'm excited to participate in this leadership program.",
+    "responseDate": "2025-11-16"
+  },
+  {
+    "id": "N002",
+    "courseId": "OC001",
+    "employeeId": "E006",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-15",
+    "status": "accepted",
+    "employeeResponse": "Looking forward to enhancing my leadership skills.",
+    "responseDate": "2025-11-17"
+  },
+  {
+    "id": "N003",
+    "courseId": "OC001",
+    "employeeId": "E010",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-15",
+    "status": "pending",
+    "employeeResponse": null,
+    "responseDate": null
+  },
+  {
+    "id": "N004",
+    "courseId": "OC002",
+    "employeeId": "E002",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-18",
+    "status": "accepted",
+    "employeeResponse": "This aligns perfectly with my current projects.",
+    "responseDate": "2025-11-19"
+  },
+  {
+    "id": "N005",
+    "courseId": "OC002",
+    "employeeId": "E003",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-18",
+    "status": "pending",
+    "employeeResponse": null,
+    "responseDate": null
+  },
+  {
+    "id": "N006",
+    "courseId": "OC002",
+    "employeeId": "E005",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-18",
+    "status": "rejected",
+    "employeeResponse": "I have a conflicting commitment during these dates.",
+    "responseDate": "2025-11-19"
+  },
+  {
+    "id": "N007",
+    "courseId": "OC003",
+    "employeeId": "E003",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-20",
+    "status": "accepted",
+    "employeeResponse": "Perfect opportunity to enhance my analytics skills.",
+    "responseDate": "2025-11-20"
+  },
+  {
+    "id": "N008",
+    "courseId": "OC003",
+    "employeeId": "E007",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-20",
+    "status": "pending",
+    "employeeResponse": null,
+    "responseDate": null
+  },
+  {
+    "id": "N009",
+    "courseId": "OC004",
+    "employeeId": "E004",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-19",
+    "status": "accepted",
+    "employeeResponse": "Great for client presentations!",
+    "responseDate": "2025-11-20"
+  },
+  {
+    "id": "N010",
+    "courseId": "OC004",
+    "employeeId": "E008",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-19",
+    "status": "accepted",
+    "employeeResponse": "This will help with marketing campaigns.",
+    "responseDate": "2025-11-20"
+  },
+  {
+    "id": "N011",
+    "courseId": "OC004",
+    "employeeId": "E012",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-19",
+    "status": "pending",
+    "employeeResponse": null,
+    "responseDate": null
+  },
+  {
+    "id": "N012",
+    "courseId": "OC005",
+    "employeeId": "E001",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-21",
+    "status": "pending",
+    "employeeResponse": null,
+    "responseDate": null
+  },
+  {
+    "id": "N013",
+    "courseId": "OC005",
+    "employeeId": "E005",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-21",
+    "status": "pending",
+    "employeeResponse": null,
+    "responseDate": null
+  },
+  {
+    "id": "N014",
+    "courseId": "OC005",
+    "employeeId": "E009",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-21",
+    "status": "pending",
+    "employeeResponse": null,
+    "responseDate": null
+  },
+  {
+    "id": "N015",
+    "courseId": "OC005",
+    "employeeId": "E011",
+    "nominatedBy": "M001",
+    "nominatedDate": "2025-11-21",
+    "status": "accepted",
+    "employeeResponse": "Essential for my role in DevOps.",
+    "responseDate": "2025-11-21"
+  }
+]
