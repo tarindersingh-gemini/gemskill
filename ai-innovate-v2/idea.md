@@ -76,5 +76,5 @@ Conduct AI innovate hackthon to foster creativity and problem-solving using AI t
 - Week 4: Development Kickoff
 - Week 5: Midway Check-in
 - Week 6: Final Submission & Evaluation
-- Week 6: Awards and Recognition
+- Week 9: Awards and Recognition
 - Week 10: Post-Hackathon Review
